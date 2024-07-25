@@ -25,16 +25,16 @@ export default function NavBar() {
                 <IoMdClose size={22} />
               </div>
 
-              <Link href="#" className="hover:text-main duration-300">
+              <Link href="#" className="text-gray-500 hover:text-main duration-300 font-semibold">
                 Home
               </Link>
-              <Link href="#" className="hover:text-main duration-300" >
+              <Link href="#" className="text-gray-500 hover:text-main duration-300 font-semibold">
                 Products
               </Link>
-              <Link href="#" className="hover:text-main duration-300">
+              <Link href="#" className="text-gray-500 hover:text-main duration-300 font-semibold">
                 About
               </Link>
-              <Link href="#" className="hover:text-main duration-300">
+              <Link href="#" className="text-gray-500 hover:text-main duration-300 font-semibold">
                 FAQ
               </Link>
 
