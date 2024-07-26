@@ -16,7 +16,7 @@ export default function NavBar() {
       <div className="container">
         <div className="flex items-center py-4">
           <Link href="#" className="mr-auto flex items-center gap-2 text-lg font-semibold">
-            <Image src={LOGO} alt="RATRO Logo" className="w-40 h-9" />
+            <Image src={LOGO} alt="RATRO Logo" className="w-36 h-8" />
           </Link>
 
           <div className="flex items-center space-x-5 md:space-x-8">
