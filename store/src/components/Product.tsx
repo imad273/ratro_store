@@ -14,7 +14,7 @@ const Product = ({ img, name, price, discount, discountPrice }: Props) => {
   return (
     <div className="flex flex-col justify-between h-full">
       <div>
-        <Image className="w-full h-52 rounded" src={img} alt="product 1" />
+        <Image className="w-full h-60 md:h-52 rounded" src={img} alt="product 1" />
         <div className="mt-4 mb-1">
           <h2 className="text-headingText text-2xl">{name}</h2>
           {discount ?

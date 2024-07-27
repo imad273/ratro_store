@@ -20,7 +20,7 @@ export default function NavBar() {
           </Link>
 
           <div className="flex items-center space-x-5 md:space-x-8">
-            <nav className={`${phoneMenu ? "w-full" : "w-0"} fixed md:static top-0 left-0 h-full flex-col md:flex-row justify-center bg-white duration-300 overflow-hidden md:w-full flex items-center gap-8`}>
+            <nav className={`z-50 ${phoneMenu ? "w-full" : "w-0"} fixed md:static top-0 left-0 h-full flex-col md:flex-row justify-center bg-white duration-300 overflow-hidden md:w-full flex items-center gap-8`}>
               <div className="md:hidden absolute top-5 right-6" onClick={() => setPhoneMenu(false)}>
                 <IoMdClose size={22} />
               </div>

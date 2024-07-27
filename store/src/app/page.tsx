@@ -63,7 +63,7 @@ export default function Home() {
         <h1 className="text-headingText text-4xl text-center font-semibold py-5">Trend Products</h1>
 
         <div className="container">
-          <div className="grid grid-cols-4 gap-6 py-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-6">
             <Product img={productImg1} name={"Unspel"} discount={false} discountPrice={0} price={29.99} />
             <Product img={productImg2} name={"CyberEar"} discount={true} discountPrice={29.99} price={49.99} />
             <Product img={productImg3} name={"Viseput"} discount={false} discountPrice={0} price={89.99} />
