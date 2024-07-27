@@ -4,6 +4,18 @@ import { motion } from "framer-motion";
 import { HeroHighlight, Highlight } from "@/components/ui/heroHighlight";
 import { Accordion, Content, Tab, Trigger } from '@/components/ui/accordion'
 import { GridBeam } from "@/components/ui/gridBeam";
+import { ShinyTextButton } from "@/components/ui/shinyTextButton";
+import { ArrowRightIcon } from "lucide-react";
+import Image from "next/image";
+
+// Images
+import productImg1 from "@/assets/product-1.jpg";
+import productImg2 from "@/assets/product-2.jpg";
+import productImg3 from "@/assets/product-3.jpg";
+import productImg4 from "@/assets/product-4.jpg";
+
+import { Button } from "@/components/ui/button"
+import { Product } from "@/components";
 
 export default function Home() {
   // FAQ Questions
@@ -38,7 +50,7 @@ export default function Home() {
             }}
             className="text-2xl px-4 md:text-4xl lg:text-5xl font-bold text-headingText max-w-4xl leading-relaxed lg:leading-snug text-center"
           >
-            With insomnia, nothing&apos;s real. Everything is far away. Everything
+            With Ratro, nothing&apos;s real. Everything is far away. Everything
             is a{" "}
             <Highlight className="text-gray-200">
               copy, of a copy, of a copy.
@@ -47,9 +59,24 @@ export default function Home() {
         </HeroHighlight>
       </section>
 
-      <section className="min-h-screen">
-        <h1 className="text-headingText text-4xl text-center font-semibold py-5">Best Products</h1>
+      <section className="blured py-3">
+        <h1 className="text-headingText text-4xl text-center font-semibold py-5">Trend Products</h1>
 
+        <div className="container">
+          <div className="grid grid-cols-4 gap-6 py-6">
+            <Product img={productImg1} name={"Unspel"} discount={false} discountPrice={0} price={29.99} />
+            <Product img={productImg2} name={"CyberEar"} discount={true} discountPrice={29.99} price={49.99} />
+            <Product img={productImg3} name={"Viseput"} discount={false} discountPrice={0} price={89.99} />
+            <Product img={productImg4} name={"Neon Pack"} discount={true} discountPrice={59.99} price={79.99} />
+          </div>
+
+          <div className="flex justify-end py-10">
+            <ShinyTextButton className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-700 hover:duration-300">
+              <span>✨ See All Products</span>
+              <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+            </ShinyTextButton>
+          </div>
+        </div>
       </section>
 
       <section className="min-h-[80vh]">
