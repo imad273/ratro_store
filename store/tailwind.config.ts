@@ -29,7 +29,7 @@ const config = {
     extend: {
       colors: {
         main: "#3c10cc",
-        mainHover: "#1d41e0",
+        mainHover: "#330ead",
         headingText: "#111A45",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

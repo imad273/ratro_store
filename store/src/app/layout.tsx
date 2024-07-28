@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Navbar, PromotionSign } from "@/components";
+import { MainLayout } from "@/components";
+import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,14 +13,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log(notFound)
   return (
     <html lang="en">
       <body>
-        <PromotionSign />
-        <Navbar />
-        <main>
+        <MainLayout>
           {children}
-        </main>
+        </MainLayout>
       </body>
     </html>
   );

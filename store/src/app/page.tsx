@@ -82,25 +82,15 @@ export default function Home() {
       </section>
 
       <section className="min-h-[50vh] flex justify-center items-center bg-main py-8 text-white">
-        {/* <div className="container">
-          <h3 className="text-4xl pb-5 font-semibold">Join Our Newsletter!</h3>
-          <p className="w-5/6 pb-5">Subscribe to our newsletter and be the first to know about our latest products, exclusive offers, and special promotions. Simply enter your email below to stay updated!</p>
-
-          <div className="flex w-full max-w-md items-center space-x-2">
-            <Input className="text-gray-700" type="email" placeholder="Email" />
-            <Button className="bg-white text-gray-700 hover:bg-gray-200 hover:text-main" type="submit">Subscribe</Button>
-          </div>
-        </div> */}
-
         <div className="relative w-full">
           <Line className="bg-gradient-to-l left-0 top-2 sm:top-4 md:top-6" />
           <Line className="bg-gradient-to-r bottom-2 sm:bottom-4 md:bottom-6 left-0" />
 
           <Line className="w-px bg-gradient-to-t right-2 sm:right-4 md:right-6 h-full inset-y-0" />
           <Line className="w-px bg-gradient-to-b left-2 sm:left-4 md:left-6 h-full inset-y-0" />
-          
+
           <div className="container relative z-20 py-14">
-            <div className="w-full center">
+            <div className="w-full px-3 md:px-0">
               <h3 className="text-4xl pb-5 font-semibold">Join Our Newsletter!</h3>
               <p className="w-5/6 pb-5">Subscribe to our newsletter and be the first to know about our latest products, exclusive offers, and special promotions. Simply enter your email below to stay updated!</p>
 
