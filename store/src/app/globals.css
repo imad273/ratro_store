@@ -8,6 +8,18 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
+.custom-truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2; /* Limits the text to 3 lines */
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -66,7 +78,7 @@
 }
 
 .blured {
-  background: linear-gradient(45deg, rgba(121, 95, 207, 0.1) 0%, rgba(255, 255, 255) 50%, rgba(153,233,233, 0.1) 100%);
+  background: linear-gradient(45deg, rgba(121, 95, 207, 0.1) 0%, rgba(255, 255, 255) 50%, rgba(153, 233, 233, 0.1) 100%);
   backdrop-filter: blur(10px);
 }
 

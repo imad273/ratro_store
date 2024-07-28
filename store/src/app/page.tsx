@@ -103,7 +103,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="min-h-[80vh]">
+      <section className="min-h-[80vh]" id="faq">
         <div className="container flex w-full items-start justify-center">
           <div className="w-full">
             <GridBeam className="sm:pl-16 pt-28 pl-4 flex items-start justify-start">
@@ -121,8 +121,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </main>
   );
 }

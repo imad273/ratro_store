@@ -34,7 +34,7 @@ export default function NavBar() {
               <Link href="#" className="text-gray-500 hover:text-main duration-300 font-semibold">
                 About
               </Link>
-              <Link href="#" className="text-gray-500 hover:text-main duration-300 font-semibold">
+              <Link href="/#faq" className="text-gray-500 hover:text-main duration-300 font-semibold">
                 FAQ
               </Link>
 

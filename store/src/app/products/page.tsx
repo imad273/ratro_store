@@ -16,7 +16,7 @@ const page = () => {
               <p className='text-gray-700 max-w-md mt-6'>Lorem ipsum elit. quia! reprehenderit, vero obcaecati dolorum, error cum! Molestiae totam sit et?</p>
             </div>
             <div className='py-10 md:py-0'>
-            <Product img={productImg2} name={"CyberEar"} discount={true} discountPrice={29.99} price={49.99} />
+              <Product img={productImg2} name={"CyberEar"} discount={true} discountPrice={29.99} price={49.99} />
             </div>
           </div>
         </div>
