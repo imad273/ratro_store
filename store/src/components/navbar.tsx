@@ -40,7 +40,7 @@ export default function NavBar() {
 
             </nav>
 
-            <Link href="#" className="bg-main hover:bg-mainHover duration-300 shadow-md shadow-main/50 border-none rounded-xl text-white p-2.5">
+            <Link href="/cart" className="bg-main hover:bg-mainHover duration-300 shadow-md shadow-main/50 border-none rounded-xl text-white p-2.5">
               <IoBagHandleOutline size={21} />
             </Link>
 

@@ -3,7 +3,6 @@
 import React from 'react'
 import productImg1 from "@/assets/product-1.jpg";
 import Image from "next/image";
-import { HiOutlineTruck } from 'react-icons/hi';
 import { FaClipboardCheck, FaShieldAlt } from 'react-icons/fa';
 import { Button } from "@/components/ui/button"
 import {
@@ -11,12 +10,8 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { CreditCard, Keyboard, Settings, User } from 'lucide-react';
 import { IoIosArrowDown } from 'react-icons/io';
 import { FaCartShopping, FaTruckFast } from 'react-icons/fa6';
 
@@ -94,10 +89,12 @@ const page = () => {
               <span>
                 Quantity
               </span>
-              <div className='flex items-center my-1'>
-                <div className='py-2 px-5 bg-gray-200 text-xl rounded-l-md cursor-pointer'>+</div>
-                <div className='py-2.5 px-5 bg-gray-100 h-full'>1</div>
-                <div className='py-2 px-5 bg-gray-200 text-xl rounded-r-md cursor-pointer'>-</div>
+              <div>
+                <div className='inline-flex items-center my-1 py-2 border rounded-md'>
+                  <div className='px-5 text-xl text-headingText font-semibold rounded-r-md cursor-pointer'>-</div>
+                  <div className='px-5 h-full text-headingText font-semibold'>1</div>
+                  <div className='px-5 text-xl text-headingText font-semibold rounded-l-md cursor-pointer'>+</div>
+                </div>
               </div>
             </div>
 
