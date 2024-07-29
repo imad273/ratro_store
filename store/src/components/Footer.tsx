@@ -25,7 +25,7 @@ const Footer = () => {
                     <FaFacebook size={21} />
                   </div>
                   <div className='text-gray-600 cursor-pointer duration-200 hover:text-gray-700'>
-                    <PiInstagramLogoDuotone size={21}/>
+                    <PiInstagramLogoDuotone size={21} />
                   </div>
                   <div className='text-gray-600 cursor-pointer duration-200 hover:text-gray-700'>
                     <FaTiktok size={20} />
@@ -34,20 +34,13 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="mt-6 lg:mt-0 lg:flex-1">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="mt-6 lg:mt-0 md:flex-1">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <h3 className="text-gray-700 uppercase">About</h3>
-                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Company</a>
-                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">community</a>
-                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Careers</a>
-                </div>
-
-                <div>
-                  <h3 className="text-gray-700 uppercase">Blog</h3>
-                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Tec</a>
-                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Music</a>
-                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Videos</a>
+                  <h3 className="text-gray-700 uppercase">Resources</h3>
+                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Privacy Policy</a>
+                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Terms & conditions</a>
+                  <a href="#" className="block mt-2 text-sm text-gray-600 hover:underline">Refund & Return Policy</a>
                 </div>
 
                 <div>
