@@ -19,13 +19,15 @@ const page = () => {
   return (
     <main>
       <section className='min-h-screen container'>
-        <div className='flex gap-6 py-8'>
-          <div className='w-3/6'>
+        <div className='flex flex-col md:flex-row gap-6 py-8'>
+          <div className='md:w-3/6'>
+            <h1 className='mb-6 md:hidden text-3xl text-headingText font-semibold'>Unspel</h1>
+
             <Image src={productImg1} alt='product' className='rounded' />
           </div>
 
-          <div className='w-3/6'>
-            <h1 className='text-4xl text-headingText font-semibold'>Unspel</h1>
+          <div className='md:w-3/6'>
+            <h1 className='hidden md:block text-4xl text-headingText font-semibold'>Unspel</h1>
 
             <div className="py-3 flex items-center justify-end gap-2">
               <p className="line-through">$49.99</p>
@@ -40,15 +42,21 @@ const page = () => {
             <div className='grid grid-cols-3 gap-2 py-3'>
               <div className='flex flex-col items-center gap-2'>
                 <FaTruckFast size={20} className='text-gray-500' />
-                Free Shipping
+                <p className="text-center">
+                  Free Shipping
+                </p>
               </div>
               <div className='flex flex-col items-center gap-2'>
                 <FaClipboardCheck size={20} className='text-gray-500' />
-                In Stock
+                <p className="text-center">
+                  In Stock
+                </p>
               </div>
               <div className='flex flex-col items-center gap-2'>
                 <FaShieldAlt size={20} className='text-gray-500' />
-                Secure Checkout
+                <p className="text-center">
+                  Secure Checkout
+                </p>
               </div>
             </div>
 
