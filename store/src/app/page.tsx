@@ -18,6 +18,9 @@ import { Button } from "@/components/ui/button"
 import { Footer, Product } from "@/components";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Lights } from "@/components/ui/BackgroundLights";
+import { twMerge } from "tailwind-merge";
 
 export default function Home() {
   // FAQ Questions
@@ -73,10 +76,12 @@ export default function Home() {
           </div>
 
           <div className="flex justify-end py-10">
-            <ShinyTextButton className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-700 hover:duration-300">
-              <span>✨ See All Products</span>
-              <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-            </ShinyTextButton>
+            <Link href="/products">
+              <ShinyTextButton className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-700 hover:duration-300">
+                <span>✨ See All Products</span>
+                <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+              </ShinyTextButton>
+            </Link>
           </div>
         </div>
       </section>
@@ -103,6 +108,34 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="about">
+        <div className="bg-white min-h-screen h-screen md:min-h-[80vh] md:h-[80vh]">
+          <div className='w-full h-full relative bg-grid-black/[0.1] px-4'>
+            <div className='relative h-full flex-col flex items-center justify-center z-30 animate-moveUp'>
+              <div
+                className={
+                  'text-center font-bold text-transparent text-5xl bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600'
+                }
+              >
+                About us
+              </div>
+              <div className="text-gray-700 text-lg py-2 text-center font-semibold">
+                We sell electronic products
+              </div>
+              
+              <p className="w-full text-sm md:w-4/6 text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae assumenda magnam, quis minima architecto consequuntur qui molestiae, ipsum et placeat, deleniti accusantium quaerat cupiditate quidem debitis iusto blanditiis cum itaque!</p>
+            </div>
+
+            <div className="absolute top-0 bg-gradient-to-b from-white via-white to-transparent w-full h-3/6 left-0 z-10">
+
+            </div>
+            {/* <div className={'absolute bottom-0 left-0 w-full h-full z-0 animate-appear opacity-0'}>
+              <Lights />
+            </div> */}
+          </div>
+        </div>
+      </section>
+
       <section className="min-h-[80vh]" id="faq">
         <div className="container flex w-full items-start justify-center">
           <div className="w-full">
@@ -111,7 +144,7 @@ export default function Home() {
                 {questions.map((e, i) => {
                   return (
                     <Tab key={i}>
-                      <Trigger>{e.question}</Trigger>
+                      <Trigger className="hover:translate-x-1.5 duration-200">{e.question}</Trigger>
                       <Content>{e.answer}</Content>
                     </Tab>
                   )
@@ -125,6 +158,7 @@ export default function Home() {
   );
 }
 
+// Lines in the Newsletter section 
 const Line = ({ className = "" }) => (
   <div
     className={cn(
