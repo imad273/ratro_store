@@ -15,12 +15,10 @@ import productImg3 from "@/assets/product-3.jpg";
 import productImg4 from "@/assets/product-4.jpg";
 
 import { Button } from "@/components/ui/button"
-import { Footer, Product } from "@/components";
+import { Product } from "@/components";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Lights } from "@/components/ui/BackgroundLights";
-import { twMerge } from "tailwind-merge";
 
 export default function Home() {
   // FAQ Questions
