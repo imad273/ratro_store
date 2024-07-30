@@ -122,7 +122,7 @@ export default function Home() {
               <div className="text-gray-700 text-lg py-2 text-center font-semibold">
                 We sell electronic products
               </div>
-              
+
               <p className="w-full text-sm md:w-4/6 text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae assumenda magnam, quis minima architecto consequuntur qui molestiae, ipsum et placeat, deleniti accusantium quaerat cupiditate quidem debitis iusto blanditiis cum itaque!</p>
             </div>
 
@@ -162,7 +162,7 @@ export default function Home() {
 const Line = ({ className = "" }) => (
   <div
     className={cn(
-      "h-px w-full via-zinc-400 from-[1%] from-white to-zinc-500 absolute -z-0",
+      "h-px w-full from-white to-zinc-400 absolute -z-0",
       className
     )}
   />
