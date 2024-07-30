@@ -18,7 +18,7 @@ const Footer = () => {
                   <Image className="w-auto h-7" src={LOGO} alt="Logo" />
                 </a>
 
-                <p className="max-w-sm mt-2 text-gray-500">Join our community on social media and share your experience with us!</p>
+                <p className="max-w-sm text-sm mt-2 text-gray-500">Join our community on social media and share your experience with us!</p>
 
                 <div className="flex items-center gap-3 my-3">
                   <div className='text-gray-600 cursor-pointer duration-200 hover:text-gray-700'>
