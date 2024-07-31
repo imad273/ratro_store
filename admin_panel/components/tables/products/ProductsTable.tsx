@@ -1,6 +1,6 @@
 'use client';
 import { CellAction } from './cell-action';
-import { OrderProps } from '@/types/orders.types';
+import { ProductProps } from '@/types/products.types';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -14,10 +14,10 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 
 interface TableProps {
-  data: OrderProps[];
+  data: ProductProps[];
 }
 
-const OrdersTable = ({ data }: TableProps) => {
+const ProductsTable = ({ data }: TableProps) => {
 
   const columns: any[] = [
     {
@@ -111,4 +111,4 @@ const OrdersTable = ({ data }: TableProps) => {
   )
 }
 
-export default OrdersTable
+export default ProductsTable

@@ -1,6 +1,8 @@
 'use client';
-import { CellAction } from './cell-action';
-import { OrderProps } from '@/types/orders.types';
+
+import { Button } from '@/components/ui/button';
+import { UserProps } from '@/types/users.types';
+import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -11,28 +13,32 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
+import { CellAction } from './cell-action';
 
-interface TableProps {
-  data: OrderProps[];
+interface UsersTableProps {
+  data: UserProps[];
 }
 
-const OrdersTable = ({ data }: TableProps) => {
+export const UsersTable = ({ data }: UsersTableProps) => {
+  const router = useRouter();
 
   const columns: any[] = [
     {
       header: 'Name'
     },
     {
-      header: 'Price'
+      header: 'Company'
     },
     {
-      header: 'Status',
+      header: 'Role'
     },
     {
-      header: 'Actions',
+      header: 'Status'
+    },
+    {
+      header: 'Actions'
     }
-  ];
+  ]
 
   return (
     <>
@@ -62,8 +68,15 @@ const OrdersTable = ({ data }: TableProps) => {
                   <TableCell>
                     {product.name}
                   </TableCell>
+
                   <TableCell>
-                    {product.price}
+                    {product.company}
+                  </TableCell>
+                  <TableCell>
+                    {product.role}
+                  </TableCell>
+                  <TableCell>
+                    {product.verified}
                   </TableCell>
                   <TableCell>
                     {product.status}
@@ -108,7 +121,5 @@ const OrdersTable = ({ data }: TableProps) => {
         </div>
       </div>
     </>
-  )
-}
-
-export default OrdersTable
+  );
+};

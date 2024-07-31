@@ -25,6 +25,11 @@ export default function Sidebar({ className }: SidebarProps) {
       icon: 'dashboard',
     },
     {
+      title: 'Products',
+      href: '/dashboard/products',
+      icon: 'Package',
+    },
+    {
       title: 'Orders',
       href: '/dashboard/orders',
       icon: 'ShoppingCart',

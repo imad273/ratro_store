@@ -2,100 +2,74 @@
 
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import PageContainer from '@/components/layout/page-container';
-import { UsersTable } from '@/components/tables/user-tables/usersTable';
-import { Button } from '@/components/ui/button';
+import ProductsTable from '@/components/tables/products/ProductsTable';
+import { ProductProps } from '@/types/products.types';
 import { Separator } from '@/components/ui/separator';
-import { UserProps } from '@/types/users.types';
 import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
-  { title: 'User', link: '/dashboard/user' }
+  { title: 'Products', link: '/dashboard/products' }
 ];
 
-export default function page() {
+const page = () => {
   const router = useRouter();
 
-  const users: UserProps[] = [
+  const products: ProductProps[] = [
     {
       id: 1,
       name: 'Candice Schiner',
-      company: 'Dell',
-      role: 'Frontend Developer',
-      verified: false,
+      price: 29.99,
       status: 'Active'
     },
     {
       id: 2,
       name: 'John Doe',
-      company: 'TechCorp',
-      role: 'Backend Developer',
-      verified: true,
+      price: 29.99,
       status: 'Active'
     },
     {
       id: 3,
       name: 'Alice Johnson',
-      company: 'WebTech',
-      role: 'UI Designer',
-      verified: true,
+      price: 29.99,
       status: 'Active'
     },
     {
       id: 4,
       name: 'David Smith',
-      company: 'Innovate Inc.',
-      role: 'Fullstack Developer',
-      verified: false,
+      price: 29.99,
       status: 'Inactive'
     },
     {
       id: 5,
       name: 'Emma Wilson',
-      company: 'TechGuru',
-      role: 'Product Manager',
-      verified: true,
+      price: 79.99,
       status: 'Active'
     },
     {
       id: 6,
       name: 'James Brown',
-      company: 'CodeGenius',
-      role: 'QA Engineer',
-      verified: false,
+      price: 29.99,
       status: 'Active'
     },
     {
       id: 7,
       name: 'Laura White',
-      company: 'SoftWorks',
-      role: 'UX Designer',
-      verified: true,
+      price: 23.99,
       status: 'Active'
     },
     {
       id: 8,
       name: 'Michael Lee',
-      company: 'DevCraft',
-      role: 'DevOps Engineer',
-      verified: false,
+      price: 58.99,
       status: 'Active'
     },
     {
       id: 9,
       name: 'Olivia Green',
-      company: 'WebSolutions',
-      role: 'Frontend Developer',
-      verified: true,
-      status: 'Active'
-    },
-    {
-      id: 10,
-      name: 'Robert Taylor',
-      company: 'DataTech',
-      role: 'Data Analyst',
-      verified: false,
+      price: 39.99,
       status: 'Active'
     }
   ];
@@ -107,7 +81,7 @@ export default function page() {
 
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">Orders</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Products</h2>
           </div>
           <Button
             className="text-xs md:text-sm"
@@ -118,8 +92,10 @@ export default function page() {
         </div>
         <Separator />
 
-        <UsersTable data={users} />
+        <ProductsTable data={products} />
       </div>
     </PageContainer>
-  );
+  )
 }
+
+export default page
