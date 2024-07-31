@@ -7,6 +7,7 @@ const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
   { title: 'User', link: '/dashboard/user' }
 ];
+
 export default function page() {
   return (
     <PageContainer>

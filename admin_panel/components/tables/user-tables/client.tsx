@@ -1,7 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { User } from '@/constants/data';
 import { Plus } from 'lucide-react';
@@ -18,10 +17,9 @@ export const UserClient: React.FC<ProductsClientProps> = ({ data }) => {
   return (
     <>
       <div className="flex items-start justify-between">
-        <Heading
-          title={`Users (${data.length})`}
-          description="Manage users (Client side table functionalities.)"
-        />
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Users</h2>
+        </div>
         <Button
           className="text-xs md:text-sm"
           onClick={() => router.push(`/dashboard/user/new`)}

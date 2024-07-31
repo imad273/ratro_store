@@ -8,7 +8,6 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Heading } from '@/components/ui/heading';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -76,12 +75,12 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
   const defaultValues = initialData
     ? initialData
     : {
-        name: '',
-        description: '',
-        price: 0,
-        imgUrl: [],
-        category: ''
-      };
+      name: '',
+      description: '',
+      price: 0,
+      imgUrl: [],
+      category: ''
+    };
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -139,7 +138,9 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
         loading={loading}
       /> */}
       <div className="flex items-center justify-between">
-        <Heading title={title} description={description} />
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">{title}</h2>
+        </div>
         {initialData && (
           <Button
             disabled={loading}

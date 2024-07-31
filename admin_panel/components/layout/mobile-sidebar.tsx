@@ -1,7 +1,7 @@
 'use client';
-import { DashboardNav } from '@/components/dashboard-nav';
+import { DashboardNav } from '@/components/sidebar/dashboard-nav';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { navItems } from '@/constants/data';
+import { NavItem } from '@/types';
 import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -12,6 +12,29 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function MobileSidebar({ className }: SidebarProps) {
+  const navItems: NavItem[] = [
+    {
+      title: 'Dashboard',
+      href: '/dashboard',
+      icon: 'dashboard',
+    },
+    {
+      title: 'Orders',
+      href: '/dashboard/orders',
+      icon: 'ShoppingCart',
+    },
+    {
+      title: 'Users',
+      href: '/dashboard/user',
+      icon: 'user',
+    },
+    {
+      title: 'Login',
+      href: '/',
+      icon: 'login',
+    }
+  ];
+  
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -20,9 +43,9 @@ export function MobileSidebar({ className }: SidebarProps) {
           <MenuIcon />
         </SheetTrigger>
         <SheetContent side="left" className="!px-0">
-          <div className="space-y-4 py-4">
+          <div className="py-4 space-y-4">
             <div className="px-3 py-2">
-              <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+              <h2 className="px-4 mb-2 text-lg font-semibold tracking-tight">
                 Overview
               </h2>
               <div className="space-y-1">
