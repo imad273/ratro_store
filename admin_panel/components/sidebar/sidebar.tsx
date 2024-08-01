@@ -38,11 +38,6 @@ export default function Sidebar({ className }: SidebarProps) {
       title: 'Users',
       href: '/dashboard/user',
       icon: 'user',
-    },
-    {
-      title: 'Logout',
-      href: '/',
-      icon: 'login',
     }
   ];
 

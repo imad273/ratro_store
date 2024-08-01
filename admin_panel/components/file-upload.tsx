@@ -1,5 +1,4 @@
 'use client';
-import { OurFileRouter } from '@/app/api/uploadthing/core';
 import { UploadDropzone } from '@uploadthing/react';
 import { Trash } from 'lucide-react';
 import Image from 'next/image';
@@ -28,73 +27,23 @@ export default function FileUpload({
   const onUpdateFile = (newFiles: UploadFileResponse[]) => {
     onChange([...value, ...newFiles]);
   };
+  
   return (
     <div>
-      <div className="mb-4 flex items-center gap-4">
-        {!!value.length &&
-          value?.map((item) => (
-            <div
-              key={item.key}
-              className="relative h-[200px] w-[200px] overflow-hidden rounded-md"
-            >
-              <div className="absolute right-2 top-2 z-10">
-                <Button
-                  type="button"
-                  onClick={() => onDeleteFile(item.key)}
-                  variant="destructive"
-                  size="sm"
-                >
-                  <Trash className="h-4 w-4" />
-                </Button>
-              </div>
-              <div>
-                <Image
-                  fill
-                  className="object-cover"
-                  alt="Image"
-                  src={item.fileUrl || ''}
-                />
-              </div>
-            </div>
-          ))}
-      </div>
       <div>
-        {value.length < IMG_MAX_LIMIT && (
-          <UploadDropzone<OurFileRouter>
-            className="ut-label:text-sm ut-allowed-content:ut-uploading:text-red-300 py-2 dark:bg-zinc-800"
-            endpoint="imageUploader"
-            config={{ mode: 'auto' }}
-            content={{
-              allowedContent({ isUploading }) {
-                if (isUploading)
-                  return (
-                    <>
-                      <p className="mt-2 animate-pulse text-sm text-slate-400">
-                        Img Uploading...
-                      </p>
-                    </>
-                  );
-              }
-            }}
-            onClientUploadComplete={(res) => {
-              // Do something with the response
-              const data: UploadFileResponse[] | undefined = res;
-              if (data) {
-                onUpdateFile(data);
-              }
-            }}
-            onUploadError={(error: Error) => {
-              toast({
-                title: 'Error',
-                variant: 'destructive',
-                description: error.message
-              });
-            }}
-            onUploadBegin={() => {
-              // Do something once upload begins
-            }}
-          />
-        )}
+        <div className='w-full'>
+          <label htmlFor="dropzone-file" className="flex flex-col items-center w-full p-5 mx-auto mt-2 text-center border-2 border-gray-700 border-dashed cursor-pointer bg-card rounded-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8 text-gray-50">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+            </svg>
+
+            <h2 className="mt-1 font-medium tracking-wide text-gray-200">Payment File</h2>
+
+            <p className="mt-2 text-xs tracking-wide text-gray-400">Upload or darg & drop your file SVG, PNG, JPG or GIF. </p>
+
+            <input id="dropzone-file" type="file" className="hidden" />
+          </label>
+        </div>
       </div>
     </div>
   );

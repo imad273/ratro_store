@@ -1,8 +1,7 @@
 "use client"
 
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import PageContainer from '@/components/layout/page-container';
-import { UsersTable } from '@/components/tables/user-tables/usersTable';
+import { UsersTable } from '@/components/tables/users/usersTable';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { UserProps } from '@/types/users.types';
@@ -101,25 +100,23 @@ export default function page() {
   ];
 
   return (
-    <PageContainer>
-      <div className="space-y-2">
-        <Breadcrumbs items={breadcrumbItems} />
+    <div className="space-y-2">
+      <Breadcrumbs items={breadcrumbItems} />
 
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Orders</h2>
-          </div>
-          <Button
-            className="text-xs md:text-sm"
-            onClick={() => router.push(`/dashboard/user/new`)}
-          >
-            <Plus className="w-4 h-4 mr-2" /> Add New
-          </Button>
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Users</h2>
         </div>
-        <Separator />
-
-        <UsersTable data={users} />
+        <Button
+          className="text-xs md:text-sm"
+          onClick={() => router.push(`/dashboard/user/new`)}
+        >
+          <Plus className="w-4 h-4 mr-2" /> Add New
+        </Button>
       </div>
-    </PageContainer>
+      <Separator />
+
+      <UsersTable data={users} />
+    </div>
   );
 }

@@ -19,6 +19,11 @@ export function MobileSidebar({ className }: SidebarProps) {
       icon: 'dashboard',
     },
     {
+      title: 'Products',
+      href: '/dashboard/products',
+      icon: 'Package',
+    },
+    {
       title: 'Orders',
       href: '/dashboard/orders',
       icon: 'ShoppingCart',
@@ -27,11 +32,6 @@ export function MobileSidebar({ className }: SidebarProps) {
       title: 'Users',
       href: '/dashboard/user',
       icon: 'user',
-    },
-    {
-      title: 'Login',
-      href: '/',
-      icon: 'login',
     }
   ];
   

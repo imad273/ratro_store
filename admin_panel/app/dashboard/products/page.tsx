@@ -1,13 +1,13 @@
 "use client"
 
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import PageContainer from '@/components/layout/page-container';
 import ProductsTable from '@/components/tables/products/ProductsTable';
 import { ProductProps } from '@/types/products.types';
 import { Separator } from '@/components/ui/separator';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
@@ -75,26 +75,23 @@ const page = () => {
   ];
 
   return (
-    <PageContainer>
-      <div className="space-y-2">
-        <Breadcrumbs items={breadcrumbItems} />
+    <div className="space-y-2">
+      <Breadcrumbs items={breadcrumbItems} />
 
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Products</h2>
-          </div>
-          <Button
-            className="text-xs md:text-sm"
-            onClick={() => router.push(`/dashboard/user/new`)}
-          >
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Products</h2>
+        </div>
+        <Link href={`/dashboard/products/create`}>
+          <Button className="text-xs md:text-sm">
             <Plus className="w-4 h-4 mr-2" /> Add New
           </Button>
-        </div>
-        <Separator />
-
-        <ProductsTable data={products} />
+        </Link>
       </div>
-    </PageContainer>
+      <Separator />
+
+      <ProductsTable data={products} />
+    </div>
   )
 }
 
