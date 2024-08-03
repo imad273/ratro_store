@@ -1,4 +1,3 @@
-"use client"
 
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -20,7 +19,8 @@ export const RichTextInput = ({ description, onChange }: any) => {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML())
     },
-    content: description
+    content: description,
+    immediatelyRender: false,
   })
 
   return (

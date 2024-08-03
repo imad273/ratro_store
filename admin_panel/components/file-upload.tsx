@@ -1,33 +1,50 @@
 'use client';
-import { UploadDropzone } from '@uploadthing/react';
-import { Trash } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import Image from 'next/image';
-import { UploadFileResponse } from 'uploadthing/client';
-import { IMG_MAX_LIMIT } from './forms/product-form';
-import { Button } from './ui/button';
 import { useToast } from './ui/use-toast';
+import { useState } from 'react';
 
 interface ImageUploadProps {
   onChange?: any;
-  onRemove: (value: UploadFileResponse[]) => void;
-  value: UploadFileResponse[];
+  value: any;
 }
 
 export default function FileUpload({
   onChange,
-  onRemove,
   value
 }: ImageUploadProps) {
   const { toast } = useToast();
-  const onDeleteFile = (key: string) => {
-    const files = value;
-    let filteredFiles = files.filter((item) => item.key !== key);
-    onRemove(filteredFiles);
+
+  const [previewsImages, setPreviewsImages] = useState<string[]>([]);
+
+  const onUpdateFile = (newFiles: any) => {
+    if (value === undefined) {
+      onChange(newFiles);
+    } else {
+      onChange([...value, ...newFiles]);
+    }
+
+    // image previews
+    const imageUrls = Array.from(newFiles).map((file: any) => URL.createObjectURL(file));
+    setPreviewsImages([...previewsImages, ...imageUrls]);
+
+    toast({
+      description: "Images uploaded Successfully.",
+    })
   };
-  const onUpdateFile = (newFiles: UploadFileResponse[]) => {
-    onChange([...value, ...newFiles]);
+
+  const onDeleteFile = (index: number) => {
+    let newValue = value.filter((_: any, i: any) => i !== index);;
+    let newPreview = previewsImages.filter((_, i) => i !== index);;
+
+    onChange(newValue);
+    setPreviewsImages(newPreview);
+
+    toast({
+      description: "Images Deleted Successfully.",
+    })
   };
-  
+
   return (
     <div>
       <div>
@@ -41,8 +58,20 @@ export default function FileUpload({
 
             <p className="mt-2 text-xs tracking-wide text-gray-400">Upload or darg & drop your file SVG, PNG, JPG or GIF. </p>
 
-            <input id="dropzone-file" type="file" className="hidden" />
+            <input id="dropzone-file" onChange={(e) => onUpdateFile(e.target.files)} type="file" className="hidden" />
           </label>
+        </div>
+      </div>
+
+      {/* Previews */}
+      <div>
+        <div className='flex items-center gap-5 my-2'>
+          {previewsImages.map((image, index) => (
+            <div key={image} className='flex flex-col items-center gap-2 p-1 border rounded-md border-input'>
+              <Image width={80} height={80} className='w-20 h-20 bg-cover rounded-md' src={image} alt='image' />
+              <Trash2 onClick={() => onDeleteFile(index)} size={18} className='text-red-600 cursor-pointer' />
+            </div>
+          ))}
         </div>
       </div>
     </div>

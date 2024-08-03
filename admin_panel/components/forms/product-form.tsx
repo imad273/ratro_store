@@ -40,15 +40,24 @@ const ImgSchema = z.object({
   url: z.string()
 });
 
-export const IMG_MAX_LIMIT = 3;
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const formSchema = z.object({
   name: z
     .string()
     .min(3, { message: 'Product Name must be at least 3 characters' }),
-  imgUrl: z.array(ImgSchema)
-    .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
-    .min(1, { message: 'At least one image must be added.' }),
+  images: z.object({
+    image: z
+      .array(
+        z.any()
+          .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+          .refine(
+            (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+            "Only .jpg, .jpeg, .png and .webp formats are supported."
+          )
+      )
+  }),
   price: z.coerce.number(),
   availability: z.boolean().default(false).optional(),
   discount: z.boolean().default(false).optional(),
@@ -73,7 +82,6 @@ export const ProductForm = () => {
     availability: true,
     discount: false,
     discountPrice: 0,
-    imgUrl: [],
     badge: '',
   };
 
@@ -112,7 +120,7 @@ export const ProductForm = () => {
           <h2 className="text-3xl font-bold tracking-tight">Create Product</h2>
         </div>
       </div>
-      
+
       <Separator />
 
       <Form {...form}>
@@ -122,7 +130,7 @@ export const ProductForm = () => {
         >
           <FormField
             control={form.control}
-            name="imgUrl"
+            name="images"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Images</FormLabel>
@@ -130,7 +138,6 @@ export const ProductForm = () => {
                   <FileUpload
                     onChange={field.onChange}
                     value={field.value}
-                    onRemove={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

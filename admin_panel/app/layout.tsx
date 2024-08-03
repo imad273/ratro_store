@@ -1,6 +1,5 @@
 import Providers from '@/components/layout/providers';
 import { Toaster } from '@/components/ui/toaster';
-import '@uploadthing/react/styles.css';
 import type { Metadata } from 'next';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
@@ -19,7 +18,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        
+
       </head>
       <body
         className="overflow-hidden"
