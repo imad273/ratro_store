@@ -41,32 +41,36 @@ const ImgSchema = z.object({
 });
 
 const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(3, { message: 'Product Name must be at least 3 characters' }),
-  images: z.object({
-    image: z
-      .array(
-        z.any()
-          .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-          .refine(
-            (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-            "Only .jpg, .jpeg, .png and .webp formats are supported."
-          )
+    .min(3, { message: 'Product Name is required' }),
+  images: z.array(
+    z.any().refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+        "Only .jpg, .jpeg, .png formats are supported."
       )
-  }),
-  price: z.coerce.number(),
+  ).nonempty("At least one item is required"),
+  price: z.coerce.number().min(1, { message: "Price is required" }),
   availability: z.boolean().default(false).optional(),
   discount: z.boolean().default(false).optional(),
   discountPrice: z.coerce.number(),
   description: z
     .string()
-    .min(3, { message: 'Product description must be at least 3 characters' }),
-  category: z.string().min(1, { message: 'Please select a category' })
-});
+    .min(3, { message: 'Product description is required' }),
+  badge: z.string().min(1, { message: 'Please select a badge' })
+}).refine((data) => {
+
+  if (data.discount === true) {
+    console.log(data.discount);
+    return data.discountPrice >= 1
+  }
+
+  return true
+}, { message: "Price after Discount is require", path: ['discountPrice'] });
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
@@ -78,17 +82,19 @@ export const ProductForm = () => {
   const defaultValues = {
     name: '',
     description: '',
-    price: 0,
+    images: [],
+    price: 1,
     availability: true,
     discount: false,
-    discountPrice: 0,
-    badge: '',
+    discountPrice: 1,
+    badge: 'none',
   };
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues
   });
+
 
   const onSubmit = async (data: ProductFormValues) => {
     console.log(data);
@@ -223,7 +229,7 @@ export const ProductForm = () => {
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input type="number" disabled={loading} {...field} />
+                    <Input min={1} type="number" disabled={loading} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -240,7 +246,7 @@ export const ProductForm = () => {
                   <FormItem>
                     <FormLabel>Price after discount</FormLabel>
                     <FormControl>
-                      <Input type="number" disabled={loading} {...field} />
+                      <Input min={1} type="number" disabled={loading} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -251,7 +257,7 @@ export const ProductForm = () => {
 
           <FormField
             control={form.control}
-            name="category"
+            name="badge"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Badge</FormLabel>
@@ -259,7 +265,7 @@ export const ProductForm = () => {
                   disabled={loading}
                   onValueChange={field.onChange}
                   value={field.value}
-                  defaultValue={''}
+                  defaultValue={'none'}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -270,7 +276,7 @@ export const ProductForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="">
+                    <SelectItem value="none">
                       none
                     </SelectItem>
                     <SelectItem value="Best seller">

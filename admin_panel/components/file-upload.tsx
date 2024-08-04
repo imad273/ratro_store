@@ -19,7 +19,7 @@ export default function FileUpload({
 
   const onUpdateFile = (newFiles: any) => {
     if (value === undefined) {
-      onChange(newFiles);
+      onChange([newFiles]);
     } else {
       onChange([...value, ...newFiles]);
     }
