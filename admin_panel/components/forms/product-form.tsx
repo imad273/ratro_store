@@ -28,6 +28,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '../ui/use-toast';
 import FileUpload from '../file-upload';
 import { RichTextInput } from '../richTextEditor';
+import supabase from '@/lib/supabaseClient';
+import LoadingBadge from '../loading/uploadLoading';
 
 const ImgSchema = z.object({
   fileName: z.string(),
@@ -63,9 +65,7 @@ const formSchema = z.object({
     .min(3, { message: 'Product description is required' }),
   badge: z.string().min(1, { message: 'Please select a badge' })
 }).refine((data) => {
-
   if (data.discount === true) {
-    console.log(data.discount);
     return data.discountPrice >= 1
   }
 
@@ -96,27 +96,62 @@ export const ProductForm = () => {
   });
 
 
-  const onSubmit = async (data: ProductFormValues) => {
-    console.log(data);
-    try {
-      /* setLoading(true);
-      
-      router.refresh();
-      router.push(`/dashboard/products`);
+  const onSubmit = async (dataValue: ProductFormValues) => {
+    //console.log(dataValue);
+
+    setLoading(true);
+
+    const images = [];
+
+    for (let i = 0; i < dataValue.images.length; i++) {
+      const { data, error } = await supabase
+        .storage
+        .from('products_images')
+        .upload(`public/product_${Date.now()}.png`, dataValue.images[i]);
+
+      if (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.'
+        });
+
+        return
+      }
+
+      images.push(data.fullPath)
+    }
+
+    const { data, error } = await supabase
+      .from('products')
+      .insert({
+        name: dataValue.name,
+        images: images,
+        price: dataValue.price,
+        availability: dataValue.availability,
+        discount: dataValue.discount,
+        discountPrice: dataValue.discountPrice,
+        badge: dataValue.badge,
+        description: dataValue.description,
+      }).select()
+
+    if (error) {
       toast({
         variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
+        title: 'Something went wrong.',
         description: 'There was a problem with your request.'
-      }); */
-    } catch (error: any) {
-      /* toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
-      }); */
-    } finally {
-      //setLoading(false);
+      });
+      return
+    } else {
+      toast({
+        variant: "success",
+        description: "Product Added successfully",
+      });
+
+      setTimeout(() => router.push('/dashboard/products'), 2000)
     }
+
+    setLoading(false);
   };
 
   return (
@@ -129,188 +164,190 @@ export const ProductForm = () => {
 
       <Separator />
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="images"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <div className='relative'>
+        {loading && <LoadingBadge />}
 
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={loading}
-                    placeholder="Product name"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className='space-y-1'>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-full space-y-4"
+          >
             <FormField
               control={form.control}
-              name="availability"
+              name="images"
               render={({ field }) => (
                 <FormItem>
-                  <div className='flex items-center gap-2'>
-
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-
-                    </FormControl>
-                    <label
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Availability
-                    </label>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="discount"
-              render={({ field }) => (
-                <FormItem>
-                  <div className='flex items-center gap-2'>
-
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-
-                    </FormControl>
-                    <label
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Discount
-                    </label>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="grid items-center grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>Images</FormLabel>
                   <FormControl>
-                    <Input min={1} type="number" disabled={loading} {...field} />
+                    <FileUpload
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className='relative p-1'>
-              <div className={`absolute cursor-not-allowed top-0 left-0 w-full h-full z-30 rounded bg-white opacity-50 ${form.getValues('discount') === true ? 'hidden' : ''}`}></div>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Product name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className='space-y-1'>
+              <FormField
+                control={form.control}
+                name="availability"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className='flex items-center gap-2'>
+
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+
+                      </FormControl>
+                      <label
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Availability
+                      </label>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
-                name="discountPrice"
+                name="discount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price after discount</FormLabel>
-                    <FormControl>
-                      <Input min={1} type="number" disabled={loading} {...field} />
-                    </FormControl>
+                    <div className='flex items-center gap-2'>
+
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+
+                      </FormControl>
+                      <label
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Discount
+                      </label>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-          </div>
 
-          <FormField
-            control={form.control}
-            name="badge"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Badge</FormLabel>
-                <Select
-                  disabled={loading}
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue={'none'}
-                >
+            <div className="grid items-center grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price</FormLabel>
+                    <FormControl>
+                      <Input min={1} type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className='relative p-1'>
+                <div className={`absolute cursor-not-allowed top-0 left-0 w-full h-full z-30 rounded bg-white opacity-50 ${form.getValues('discount') === true ? 'hidden' : ''}`}></div>
+
+                <FormField
+                  control={form.control}
+                  name="discountPrice"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price after discount</FormLabel>
+                      <FormControl>
+                        <Input min={1} type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="badge"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Badge</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={'none'}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a category"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="none">
+                        none
+                      </SelectItem>
+                      <SelectItem value="Best seller">
+                        Best seller
+                      </SelectItem>
+                      <SelectItem value="new">
+                        New
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue
-                        defaultValue={field.value}
-                        placeholder="Select a category"
-                      />
-                    </SelectTrigger>
+                    <RichTextInput description={field.value} onChange={field.onChange} />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="none">
-                      none
-                    </SelectItem>
-                    <SelectItem value="Best seller">
-                      Best seller
-                    </SelectItem>
-                    <SelectItem value="new">
-                      New
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <RichTextInput description={field.value} onChange={field.onChange} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button disabled={loading} className="ml-auto" type="submit">
-            Create
-          </Button>
-        </form>
-      </Form>
+            <Button disabled={loading} className="ml-auto" type="submit">
+              Create
+            </Button>
+          </form>
+        </Form>
+      </div>
     </>
   );
 };
