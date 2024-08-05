@@ -38,7 +38,6 @@ const ProductsTable = ({ data }: TableProps) => {
     <>
       <Input
         placeholder={`Search Products...`}
-        value={''}
         className="w-full md:max-w-sm"
       />
 
@@ -63,10 +62,10 @@ const ProductsTable = ({ data }: TableProps) => {
                     {product.name}
                   </TableCell>
                   <TableCell>
-                    {product.price}
+                    ${product.price}
                   </TableCell>
                   <TableCell>
-                    {product.status}
+                    {product.availability ? "available" : "unavailable"}
                   </TableCell>
                   <TableCell>
                     <CellAction />

@@ -6,8 +6,10 @@ import { ProductProps } from '@/types/products.types';
 import { Separator } from '@/components/ui/separator';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import supabase from '@/lib/supabaseClient';
+import TableSkeleton from '@/components/loading/tableSkeleton';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
@@ -15,64 +17,26 @@ const breadcrumbItems = [
 ];
 
 const page = () => {
-  const router = useRouter();
 
-  const products: ProductProps[] = [
-    {
-      id: 1,
-      name: 'Candice Schiner',
-      price: 29.99,
-      status: 'Active'
-    },
-    {
-      id: 2,
-      name: 'John Doe',
-      price: 29.99,
-      status: 'Active'
-    },
-    {
-      id: 3,
-      name: 'Alice Johnson',
-      price: 29.99,
-      status: 'Active'
-    },
-    {
-      id: 4,
-      name: 'David Smith',
-      price: 29.99,
-      status: 'Inactive'
-    },
-    {
-      id: 5,
-      name: 'Emma Wilson',
-      price: 79.99,
-      status: 'Active'
-    },
-    {
-      id: 6,
-      name: 'James Brown',
-      price: 29.99,
-      status: 'Active'
-    },
-    {
-      id: 7,
-      name: 'Laura White',
-      price: 23.99,
-      status: 'Active'
-    },
-    {
-      id: 8,
-      name: 'Michael Lee',
-      price: 58.99,
-      status: 'Active'
-    },
-    {
-      id: 9,
-      name: 'Olivia Green',
-      price: 39.99,
-      status: 'Active'
+  const [productsData, setProductsData] = useState<ProductProps[]>([])
+  const [loading, setIsLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select()
+
+      if (!error) {
+        setProductsData(data);
+        setIsLoading(false)
+      }
     }
-  ];
+
+    fetchProducts();
+  }, [])
+
+
 
   return (
     <div className="space-y-2">
@@ -90,7 +54,11 @@ const page = () => {
       </div>
       <Separator />
 
-      <ProductsTable data={products} />
+      {loading ?
+        <TableSkeleton />
+        :
+        <ProductsTable data={productsData} />
+      }
     </div>
   )
 }
