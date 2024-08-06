@@ -10,7 +10,7 @@ interface AlertModalProps {
   loading: boolean;
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({
+export const DeleteAlert: React.FC<AlertModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -33,7 +33,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className="flex w-full items-center justify-end space-x-2 pt-6">
+      <div className="flex items-center justify-end w-full pt-6 space-x-2">
         <Button disabled={loading} variant="outline" onClick={onClose}>
           Cancel
         </Button>

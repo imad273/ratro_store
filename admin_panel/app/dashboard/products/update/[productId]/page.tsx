@@ -1,19 +1,19 @@
 "use client"
 import React from 'react'
 import { Breadcrumbs } from '@/components/breadcrumbs'
-import { CreateProductForm } from '@/components/forms/products/create-product-form';
+import { UpdateProductForm } from '@/components/forms/products/update-product-form';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
   { title: 'Products', link: '/dashboard/products' },
-  { title: 'Create', link: '/dashboard/products/create' }
+  { title: 'Update', link: '/dashboard/products' }
 ];
 
 const page = () => {
   return (
     <div className="space-y-4">
       <Breadcrumbs items={breadcrumbItems} />
-      <CreateProductForm />
+      <UpdateProductForm />
     </div>
   )
 }

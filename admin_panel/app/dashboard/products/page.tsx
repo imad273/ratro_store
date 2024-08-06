@@ -36,8 +36,6 @@ const page = () => {
     fetchProducts();
   }, [])
 
-
-
   return (
     <div className="space-y-2">
       <Breadcrumbs items={breadcrumbItems} />
@@ -57,7 +55,7 @@ const page = () => {
       {loading ?
         <TableSkeleton />
         :
-        <ProductsTable data={productsData} />
+        <ProductsTable data={productsData} setProductsData={setProductsData}/>
       }
     </div>
   )

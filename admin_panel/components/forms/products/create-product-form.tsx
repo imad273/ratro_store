@@ -1,6 +1,6 @@
 'use client';
 import * as z from 'zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,23 +23,11 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-// import FileUpload from "@/components/FileUpload";
-import { useToast } from '../ui/use-toast';
-import FileUpload from '../file-upload';
-import { RichTextInput } from '../richTextEditor';
+import { useToast } from '@/components/ui/use-toast';
+import FileUpload from '@/components/file-upload';
+import { RichTextInput } from '@/components/richTextEditor';
 import supabase from '@/lib/supabaseClient';
-import LoadingBadge from '../loading/uploadLoading';
-
-const ImgSchema = z.object({
-  fileName: z.string(),
-  name: z.string(),
-  fileSize: z.number(),
-  size: z.number(),
-  fileKey: z.string(),
-  key: z.string(),
-  fileUrl: z.string(),
-  url: z.string()
-});
+import LoadingBadge from '@/components/loading/uploadLoading';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
@@ -74,7 +61,7 @@ const formSchema = z.object({
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
-export const ProductForm = () => {
+export const CreateProductForm = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);

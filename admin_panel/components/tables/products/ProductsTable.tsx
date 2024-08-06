@@ -11,13 +11,13 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
 
 interface TableProps {
   data: ProductProps[];
+  setProductsData: React.Dispatch<React.SetStateAction<ProductProps[]>>;
 }
 
-const ProductsTable = ({ data }: TableProps) => {
+const ProductsTable = ({ data, setProductsData }: TableProps) => {
 
   const columns: any[] = [
     {
@@ -41,7 +41,7 @@ const ProductsTable = ({ data }: TableProps) => {
         className="w-full md:max-w-sm"
       />
 
-      <ScrollArea className="h-[calc(80vh-220px)] rounded-md border md:h-[calc(80dvh-200px)]">
+      <ScrollArea className="h-[calc(85vh-220px)] rounded-md border md:h-[65vh]">
         <Table className="relative">
           <TableHeader>
             <TableRow>
@@ -65,10 +65,18 @@ const ProductsTable = ({ data }: TableProps) => {
                     ${product.price}
                   </TableCell>
                   <TableCell>
-                    {product.availability ? "available" : "unavailable"}
+                    {product.availability ?
+                      <p className='font-semibold text-green-600'>
+                        available
+                      </p>
+                      :
+                      <p className='font-semibold text-red-600'>
+                        unavailable
+                      </p>
+                    }
                   </TableCell>
                   <TableCell>
-                    <CellAction />
+                    <CellAction id={product.id} images={product.images} data={data} setProductsData={setProductsData} />
                   </TableCell>
                 </TableRow>
               ))
@@ -86,7 +94,8 @@ const ProductsTable = ({ data }: TableProps) => {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="flex items-center justify-end py-4 space-x-2">
+
+      {/* <div className="flex items-center justify-end py-4 space-x-2">
         <div className="flex-1 text-sm text-muted-foreground">
           {data.length} of{' '}
           {10} row(s) selected.
@@ -105,7 +114,7 @@ const ProductsTable = ({ data }: TableProps) => {
             Next
           </Button>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

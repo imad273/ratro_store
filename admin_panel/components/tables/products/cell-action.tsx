@@ -1,28 +1,70 @@
 'use client';
-import { AlertModal } from '@/components/modal/alert-modal';
+import { DeleteAlert } from '@/components/delete alerts models/delete-alert';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/components/ui/use-toast';
+import supabase from '@/lib/supabaseClient';
+import { ProductProps } from '@/types/products.types';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+interface Props {
+  id: number
+  images: string[]
+  data: ProductProps[]
+  setProductsData: React.Dispatch<React.SetStateAction<ProductProps[]>>
+}
 
-export const CellAction = () => {
+export const CellAction = ({ id, images, data, setProductsData }: Props) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const { toast } = useToast();
+
+  const onConfirm = async () => {
+    setLoading(true)
+    const response = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id)
+
+    const modifiedImages = images.map(image => image.replace("products_images/", ""));
+
+    // delete images
+    const { error } = await supabase
+      .storage
+      .from('products_images')
+      .remove(modifiedImages)
+
+    if (response && !error) {
+      const updatedProducts = data.filter(product => product.id !== id);
+      setProductsData(updatedProducts);
+      setOpen(false)
+      toast({
+        variant: "success",
+        description: "Product Deleted successfully",
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Something went wrong.',
+        description: 'There was a problem with when delete'
+      });
+    }
+    setLoading(false)
+  };
 
   return (
     <>
-      <AlertModal
+      <DeleteAlert
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
@@ -30,24 +72,22 @@ export const CellAction = () => {
       />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className="w-8 h-8 p-0">
             <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
+            <MoreHorizontal className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/user/`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
+          <Link href={`/dashboard/products/update/${id}`}>
+            <DropdownMenuItem className='cursor-pointer'>
+              <Edit className="w-4 h-4 mr-2" /> Update
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuItem className='font-semibold text-red-600 cursor-pointer' onClick={() => setOpen(true)}>
+            <Trash className="w-4 h-4 mr-2" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu >
     </>
   );
 };
