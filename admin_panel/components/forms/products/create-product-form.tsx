@@ -84,7 +84,6 @@ export const CreateProductForm = () => {
 
 
   const onSubmit = async (dataValue: ProductFormValues) => {
-    //console.log(dataValue);
 
     setLoading(true);
 
@@ -109,7 +108,7 @@ export const CreateProductForm = () => {
       images.push(data.fullPath)
     }
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('products')
       .insert({
         name: dataValue.name,
@@ -253,7 +252,7 @@ export const CreateProductForm = () => {
                   <FormItem>
                     <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <Input min={1} type="number" {...field} />
+                      <Input min={1} type="number" step="0.01" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -270,7 +269,7 @@ export const CreateProductForm = () => {
                     <FormItem>
                       <FormLabel>Price after discount</FormLabel>
                       <FormControl>
-                        <Input min={1} type="number" {...field} />
+                        <Input min={1} type="number" step="0.01" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

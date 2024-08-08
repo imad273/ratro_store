@@ -56,7 +56,7 @@ export default function FileUpload({
 
             <h2 className="mt-1 font-medium tracking-wide text-gray-200">Payment File</h2>
 
-            <p className="mt-2 text-xs tracking-wide text-gray-400">Upload or darg & drop your file SVG, PNG, JPG or GIF. </p>
+            <p className="mt-2 text-xs tracking-wide text-gray-400">Upload your file SVG, PNG, JPG or GIF. </p>
 
             <input id="dropzone-file" onChange={(e) => onUpdateFile(e.target.files)} type="file" className="hidden" />
           </label>

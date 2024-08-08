@@ -25,7 +25,6 @@ interface Props {
 export const CellAction = ({ id, images, data, setProductsData }: Props) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
   const { toast } = useToast();
 

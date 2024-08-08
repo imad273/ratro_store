@@ -1,6 +1,6 @@
 'use client';
 import * as z from 'zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +29,7 @@ import FileUpload from '@/components/file-upload';
 import { RichTextInput } from '@/components/richTextEditor';
 import supabase from '@/lib/supabaseClient';
 import LoadingBadge from '@/components/loading/uploadLoading';
+import { ProductProps } from '@/types/products.types';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
@@ -42,7 +44,7 @@ const formSchema = z.object({
         (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
         "Only .jpg, .jpeg, .png formats are supported."
       )
-  ).nonempty("At least one item is required"),
+  ).optional(),
   price: z.coerce.number().min(1, { message: "Price is required" }),
   availability: z.boolean().default(false).optional(),
   discount: z.boolean().default(false).optional(),
@@ -60,11 +62,17 @@ const formSchema = z.object({
 }, { message: "Price after Discount is require", path: ['discountPrice'] });
 
 type ProductFormValues = z.infer<typeof formSchema>;
+interface Props {
+  productData: ProductProps | undefined
+  fetchLoading: boolean
+  productId: string
+};
 
-export const UpdateProductForm = () => {
+
+export const UpdateProductForm = ({ productData, fetchLoading, productId }: Props) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const defaultValues = {
     name: '',
@@ -82,45 +90,107 @@ export const UpdateProductForm = () => {
     defaultValues
   });
 
+  useEffect(() => {
+    if (productData) {
+      form.setValue('name', productData?.name)
+      form.setValue('description', productData?.description)
+      form.setValue('price', productData?.price)
+      form.setValue('availability', productData?.availability)
+      form.setValue('discount', productData?.discount)
+      form.setValue('discountPrice', productData?.discountPrice)
+      form.setValue('badge', productData?.badge)
+      setLoading(false)
+    }
+
+  }, [productData])
 
   const onSubmit = async (dataValue: ProductFormValues) => {
-    //console.log(dataValue);
-
     setLoading(true);
 
-    const images = [];
+    if (dataValue?.images && productData) {
+      if (dataValue && dataValue.images?.length > 0) {
 
-    for (let i = 0; i < dataValue.images.length; i++) {
-      const { data, error } = await supabase
-        .storage
-        .from('products_images')
-        .upload(`public/product_${Date.now()}.png`, dataValue.images[i]);
+        const modifiedImages = productData.images.map(image => image.replace("products_images/", ""));
 
-      if (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.'
-        });
+        // delete old images
+        const { error } = await supabase
+          .storage
+          .from('products_images')
+          .remove(modifiedImages);
+
+        const images = [];
+
+        // collect the names of the new images
+        for (let i = 0; i < dataValue.images.length; i++) {
+          const { data, error } = await supabase
+            .storage
+            .from('products_images')
+            .upload(`public/product_${Date.now()}.png`, dataValue.images[i]);
+
+          if (error) {
+            toast({
+              variant: 'destructive',
+              title: 'Uh oh! Something went wrong.',
+              description: 'There was a problem with your request.'
+            });
+
+            return
+          }
+
+          images.push(data.fullPath)
+        }
+
+        if (!error) {
+          const { error } = await supabase
+            .from('products')
+            .update({
+              name: dataValue.name,
+              price: dataValue.price,
+              images: images,
+              availability: dataValue.availability,
+              discount: dataValue.discount,
+              discountPrice: dataValue.discountPrice,
+              badge: dataValue.badge,
+              description: dataValue.description,
+            })
+            .eq('id', productId)
+
+          if (error) {
+            toast({
+              variant: 'destructive',
+              title: 'Something went wrong.',
+              description: 'There was a problem with your request.'
+            });
+            return
+          } else {
+            toast({
+              variant: "success",
+              description: "Product Updated successfully",
+            });
+
+            setTimeout(() => router.push('/dashboard/products'), 2000)
+          }
+
+        }
+        setLoading(false);
 
         return
       }
-
-      images.push(data.fullPath)
     }
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('products')
-      .insert({
+      .update({
         name: dataValue.name,
-        images: images,
         price: dataValue.price,
         availability: dataValue.availability,
         discount: dataValue.discount,
         discountPrice: dataValue.discountPrice,
         badge: dataValue.badge,
         description: dataValue.description,
-      }).select()
+      })
+      .eq('id', productId)
+
 
     if (error) {
       toast({
@@ -132,7 +202,7 @@ export const UpdateProductForm = () => {
     } else {
       toast({
         variant: "success",
-        description: "Product Added successfully",
+        description: "Product Updated successfully",
       });
 
       setTimeout(() => router.push('/dashboard/products'), 2000)
@@ -152,7 +222,7 @@ export const UpdateProductForm = () => {
       <Separator />
 
       <div className='relative'>
-        {loading && <LoadingBadge />}
+        {loading || fetchLoading ? <LoadingBadge /> : null}
 
         <Form {...form}>
           <form
@@ -171,6 +241,7 @@ export const UpdateProductForm = () => {
                       value={field.value}
                     />
                   </FormControl>
+                  <FormDescription>Upload new images to edit</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -253,7 +324,7 @@ export const UpdateProductForm = () => {
                   <FormItem>
                     <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <Input min={1} type="number" {...field} />
+                      <Input min={1} type="number" step="0.01" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -270,7 +341,7 @@ export const UpdateProductForm = () => {
                     <FormItem>
                       <FormLabel>Price after discount</FormLabel>
                       <FormControl>
-                        <Input min={1} type="number" {...field} />
+                        <Input min={1} type="number" step="0.01" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -330,7 +401,7 @@ export const UpdateProductForm = () => {
             />
 
             <Button disabled={loading} className="ml-auto" type="submit">
-              Create
+              update
             </Button>
           </form>
         </Form>

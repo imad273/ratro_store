@@ -1,10 +1,13 @@
+"use client"
 
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 export const RichTextInput = ({ description, onChange }: any) => {
+  //console.log(description);
   const className = "min-h-[200px] w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
   const editor = useEditor({
+    content: description,
     extensions: [
       StarterKit,
     ],
@@ -19,9 +22,16 @@ export const RichTextInput = ({ description, onChange }: any) => {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML())
     },
-    content: description,
     immediatelyRender: false,
   })
+
+  useEffect(() => {
+    if (!editor) {
+      return undefined
+    }
+
+    editor.commands.setContent(description)
+  }, [editor, description])
 
   return (
     <div className='space-y-2'>
@@ -42,6 +52,7 @@ import {
 } from 'lucide-react';
 import { Toggle } from "./ui/toggle"
 import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
 
 const Toolbar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
