@@ -68,7 +68,7 @@ export default function FileUpload({
         <div className='flex items-center gap-5 my-2'>
           {previewsImages.map((image, index) => (
             <div key={image} className='flex flex-col items-center gap-2 p-1 border rounded-md border-input'>
-              <Image width={80} height={80} className='w-20 h-20 bg-cover rounded-md' src={image} alt='image' />
+              <Image width={80} height={64} className='w-20 h-16 bg-cover rounded-md' src={image} alt='image' />
               <Trash2 onClick={() => onDeleteFile(index)} size={18} className='text-red-600 cursor-pointer' />
             </div>
           ))}

@@ -183,7 +183,8 @@ export const CreateProductForm = () => {
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Product name"
+                      autoComplete='false'
+                      placeholder="Product Name"
                       {...field}
                     />
                   </FormControl>
@@ -202,12 +203,14 @@ export const CreateProductForm = () => {
 
                       <FormControl>
                         <Checkbox
+                          id='availability'
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
 
                       </FormControl>
                       <label
+                        htmlFor="availability"
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         Availability
@@ -227,12 +230,14 @@ export const CreateProductForm = () => {
 
                       <FormControl>
                         <Checkbox
+                          id='discount'
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
 
                       </FormControl>
                       <label
+                        htmlFor="discount"
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         Discount
@@ -259,23 +264,19 @@ export const CreateProductForm = () => {
                 )}
               />
 
-              <div className='relative p-1'>
-                <div className={`absolute cursor-not-allowed top-0 left-0 w-full h-full z-30 rounded bg-white opacity-50 ${form.getValues('discount') === true ? 'hidden' : ''}`}></div>
-
-                <FormField
-                  control={form.control}
-                  name="discountPrice"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price after discount</FormLabel>
-                      <FormControl>
-                        <Input min={1} type="number" step="0.01" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="discountPrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price after discount</FormLabel>
+                    <FormControl>
+                      <Input disabled={!form.getValues('discount')} min={1} type="number" step="0.01" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <FormField
@@ -328,9 +329,11 @@ export const CreateProductForm = () => {
               )}
             />
 
-            <Button disabled={loading} className="ml-auto" type="submit">
-              Create
-            </Button>
+            <div className='flex justify-end'>
+              <Button disabled={loading} type="submit">
+                Create
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

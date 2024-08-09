@@ -36,10 +36,10 @@ const ProductsTable = ({ data, setProductsData }: TableProps) => {
 
   return (
     <>
-      <Input
+      {/* <Input
         placeholder={`Search Products...`}
         className="w-full md:max-w-sm"
-      />
+      /> */}
 
       <ScrollArea className="h-[calc(85vh-220px)] rounded-md border md:h-[65vh]">
         <Table className="relative">
@@ -62,7 +62,7 @@ const ProductsTable = ({ data, setProductsData }: TableProps) => {
                     {product.name}
                   </TableCell>
                   <TableCell>
-                    ${product.price}
+                    ${product.discount ? product.discountPrice : product.price}
                   </TableCell>
                   <TableCell>
                     {product.availability ?
