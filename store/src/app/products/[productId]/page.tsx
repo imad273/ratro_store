@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import productImg1 from "@/assets/product-1.jpg";
 import Image from "next/image";
 import { FaClipboardCheck, FaShieldAlt } from 'react-icons/fa';
@@ -14,120 +14,177 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { IoIosArrowDown } from 'react-icons/io';
 import { FaCartShopping, FaTruckFast } from 'react-icons/fa6';
+import { ProductProps } from '@/types/product.types';
+import supabase from '@/lib/supabaseClient';
+import ProductPreviewSkeleton from '@/components/loading/productPreviewSkeleton';
+import TextSkeleton from '@/components/loading/textSkeleton';
+import { TbPackageOff } from 'react-icons/tb';
 
-const page = () => {
+interface Props {
+  params: {
+    productId: number
+  }
+}
+
+const page = ({ params }: Props) => {
+  const [productData, setProductData] = useState<ProductProps>()
+  const [loading, setIsLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select()
+        .eq('id', params.productId)
+
+      console.log(error);
+      if (!error) {
+        setProductData(data[0]);
+        setIsLoading(false)
+      }
+    }
+
+    fetchProducts();
+  }, [])
+
+  useEffect(() => {
+    console.log(productData);
+  }, [productData])
+
   return (
     <main>
-      <section className='min-h-screen container'>
-        <div className='flex flex-col md:flex-row gap-6 py-8'>
-          <div className='md:w-3/6'>
-            <h1 className='mb-6 md:hidden text-3xl text-headingText font-semibold'>Unspel</h1>
+      {loading ?
+        <div className='my-8 md:my-0 container gap-14 min-h-[80vh] flex flex-col justify-center'>
+          <ProductPreviewSkeleton />
+          <TextSkeleton />
+        </div>
+        :
+        <>
+          <section className='min-h-screen container'>
+            <div className='flex flex-col md:flex-row gap-6 py-8'>
+              <div className='md:w-3/6'>
+                <h1 className='mb-6 md:hidden text-3xl text-headingText font-semibold'>{productData?.name}</h1>
 
-            <Image src={productImg1} alt='product' className='rounded' />
-          </div>
-
-          <div className='md:w-3/6'>
-            <h1 className='hidden md:block text-4xl text-headingText font-semibold'>Unspel</h1>
-
-            <div className="py-3 flex items-center justify-end gap-2">
-              <p className="line-through">$49.99</p>
-              <p className="text-2xl text-headingText font-semibold">$29.99</p>
-            </div>
-
-            <div className='py-3'>
-              <p className='text-sm text-gray-700 custom-truncate'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde saepe totam reprehenderit ut laborum ratione alias doloribus?</p>
-              <p className='text-main text-sm cursor-pointer font-semibold'>view description</p>
-            </div>
-
-            <div className='grid grid-cols-3 gap-2 py-3'>
-              <div className='flex flex-col items-center gap-2'>
-                <FaTruckFast size={20} className='text-gray-500' />
-                <p className="text-center">
-                  Free Shipping
-                </p>
+                <Image src={productImg1} alt='product' className='rounded' />
               </div>
-              <div className='flex flex-col items-center gap-2'>
-                <FaClipboardCheck size={20} className='text-gray-500' />
-                <p className="text-center">
-                  In Stock
-                </p>
-              </div>
-              <div className='flex flex-col items-center gap-2'>
-                <FaShieldAlt size={20} className='text-gray-500' />
-                <p className="text-center">
-                  Secure Checkout
-                </p>
-              </div>
-            </div>
 
-            <div className='my-3'>
-              <span>
-                color
-              </span>
-              <div className='w-full mt-1'>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className='flex justify-between items-center w-full bg-gray-50'>
-                      Open
-                      <IoIosArrowDown />
-                    </Button>
-                  </DropdownMenuTrigger>
+              <div className='md:w-3/6'>
+                <h1 className='hidden md:block text-4xl text-headingText font-semibold'>{productData?.name}</h1>
 
-                  <DropdownMenuContent className="w-full">
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <span>Blue</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <span>Yellow</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <span>Green</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <span>Black</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
+                {productData?.discount === true ?
+                  <div className="py-3 flex items-center justify-end gap-2">
+                    <p className="line-through">${productData?.price}</p>
+                    <p className="text-2xl text-headingText font-semibold">${productData?.discountPrice}</p>
+                  </div>
+                  :
+                  <div className="py-3 flex items-center justify-end">
+                    <p className="text-2xl text-headingText font-semibold">${productData?.price}</p>
+                  </div>
+                }
 
-            <div className='my-3'>
-              <span>
-                Quantity
-              </span>
-              <div>
-                <div className='inline-flex items-center my-1 py-2 border rounded-md'>
-                  <div className='px-5 text-xl text-headingText font-semibold rounded-r-md cursor-pointer'>-</div>
-                  <div className='px-5 h-full text-headingText font-semibold'>1</div>
-                  <div className='px-5 text-xl text-headingText font-semibold rounded-l-md cursor-pointer'>+</div>
+                <div className='py-3'>
+                  <p className='text-sm text-gray-700 custom-truncate'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde saepe totam reprehenderit ut laborum ratione alias doloribus?</p>
+                  <p className='text-main text-sm cursor-pointer font-semibold'>view all description</p>
+                </div>
+
+                <div className='grid grid-cols-3 gap-2 py-3'>
+                  <div className='flex flex-col items-center gap-2'>
+                    <FaTruckFast size={20} className='text-gray-500' />
+                    <p className="text-center">
+                      Free Shipping
+                    </p>
+                  </div>
+                  <div className='flex flex-col items-center gap-2'>
+                    {productData?.availability ?
+                      <FaClipboardCheck size={20} className='text-gray-500' />
+                      :
+                      <TbPackageOff size={20} className='text-red-500' />
+                    }
+                    <p className="text-center">
+                      {productData?.availability ?
+                        "In Stock"
+                        :
+                        "Out Of Stock"
+                      }
+                    </p>
+                  </div>
+                  <div className='flex flex-col items-center gap-2'>
+                    <FaShieldAlt size={20} className='text-gray-500' />
+                    <p className="text-center">
+                      Secure Checkout
+                    </p>
+                  </div>
+                </div>
+
+                <div className='my-3'>
+                  <span>
+                    color
+                  </span>
+                  <div className='w-full mt-1'>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className='flex justify-between items-center w-full bg-gray-50'>
+                          Open
+                          <IoIosArrowDown />
+                        </Button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent className="w-full">
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            <span>Blue</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <span>Yellow</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <span>Green</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <span>Black</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+
+                <div className='my-3'>
+                  <span>
+                    Quantity
+                  </span>
+                  <div>
+                    <div className='inline-flex items-center my-1 py-2 border rounded-md'>
+                      <div className='px-5 text-xl text-headingText font-semibold rounded-r-md cursor-pointer'>-</div>
+                      <div className='px-5 h-full text-headingText font-semibold'>1</div>
+                      <div className='px-5 text-xl text-headingText font-semibold rounded-l-md cursor-pointer'>+</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Button disabled={!productData?.availability} className='w-full gap-2'>
+                    <FaCartShopping />
+                    Add To Cart
+                  </Button>
                 </div>
               </div>
             </div>
-
-            <div>
-              <Button className='w-full gap-2'>
-                <FaCartShopping />
-                Add To Cart
-              </Button>
+          </section>
+          <section className='min-h-screen container'>
+            <div className='py-8'>
+              <div className='font-semibold mb-2'>
+                <h3 className='inline text-headingText'>Shipping: </h3>
+                <p className='inline text-red-600'>
+                  Expect 2-4 weeks for items to arrive (to be safe).
+                </p>
+              </div>
+              
+              <div className='py-6' id='description' dangerouslySetInnerHTML={{ __html: productData !== undefined ? productData?.description : "" }}></div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className='min-h-screen container'>
-        <div className='py-8'>
-          <div className='font-semibold mb-2'>
-            <h3 className='inline text-headingText'>Shipping: </h3>
-            <p className='inline text-red-600'>
-              Expect 2-4 weeks for items to arrive (to be safe).
-            </p>
-          </div>
-          <h3 className='text-4xl mb-2 text-headingText font-semibold'>Description</h3>
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eligendi incidunt voluptatum architecto sit odio provident, temporibus nisi voluptas rerum saepe aperiam quaerat consectetur ullam fugiat dicta mollitia unde sequi! Atque?</p>
-        </div>
-      </section>
+          </section>
+        </>
+      }
     </main>
   )
 }

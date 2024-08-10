@@ -12,12 +12,46 @@ html {
   scroll-behavior: smooth;
 }
 
+#description h1 {
+  color: #111A45;
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+#description p {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+#description ul {
+  margin-bottom: 40px;
+  margin-top: 10px;
+}
+
+#description li {
+  display: flex;
+  align-items: center;
+}
+
+#description li p {
+  margin-top: 1px;
+  margin-bottom: 0px;
+}
+
+ol,
+ul,
+menu {
+  padding: 0px 0px 0px 40px;
+}
+
 .custom-truncate {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  -webkit-line-clamp: 2; /* Limits the text to 3 lines */
+  -webkit-line-clamp: 2;
+  /* Limits the text to 3 lines */
 }
 
 @layer base {

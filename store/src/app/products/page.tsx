@@ -19,7 +19,6 @@ const page = () => {
         .from('products')
         .select()
 
-      console.log(error);
       if (!error) {
         setProductsData(data);
         setIsLoading(false)
@@ -29,10 +28,9 @@ const page = () => {
     fetchProducts();
   }, [])
 
-  useEffect(() => {
-    console.log(productsData);
-  }, [productsData])
-
+  /*   useEffect(() => {
+      console.log(productsData);
+    }, [productsData]) */
 
   return (
     <main>
@@ -61,7 +59,7 @@ const page = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-6">
                 {productsData.map(product => (
-                  <Product productData={product} />
+                  <Product key={product.id} productData={product} />
                 ))}
                 {/* <Product img={productImg1} name={"Unspel"} discount={false} discountPrice={0} price={29.99} />
                 <Product img={productImg2} name={"CyberEar"} discount={true} discountPrice={29.99} price={49.99} />
