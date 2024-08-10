@@ -52,6 +52,9 @@ const formSchema = z.object({
   description: z
     .string()
     .min(3, { message: 'Product description is required' }),
+  shortDescription: z
+    .string()
+    .min(3, { message: 'Short description is required' }),
   badge: z.string().min(1, { message: 'Please select a badge' })
 }).refine((data) => {
   if (data.discount === true) {
@@ -77,6 +80,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
   const defaultValues = {
     name: '',
     description: '',
+    shortDescription: '',
     images: [],
     price: 1,
     availability: true,
@@ -99,6 +103,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
       form.setValue('discount', productData?.discount)
       form.setValue('discountPrice', productData?.discountPrice)
       form.setValue('badge', productData?.badge)
+      form.setValue('shortDescription', productData?.shortDescription)
       setLoading(false)
     }
 
@@ -152,6 +157,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
               discountPrice: dataValue.discountPrice,
               badge: dataValue.badge,
               description: dataValue.description,
+              shortDescription: dataValue.shortDescription,
             })
             .eq('id', productId)
 
@@ -188,6 +194,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
         discountPrice: dataValue.discountPrice,
         badge: dataValue.badge,
         description: dataValue.description,
+        shortDescription: dataValue.shortDescription,
       })
       .eq('id', productId)
 
@@ -350,6 +357,23 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="shortDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Short Description</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete='false'
+                      placeholder="Product Short Description"
+                      {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}

@@ -1,6 +1,6 @@
 'use client';
 import * as z from 'zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -28,6 +28,7 @@ import FileUpload from '@/components/file-upload';
 import { RichTextInput } from '@/components/richTextEditor';
 import supabase from '@/lib/supabaseClient';
 import LoadingBadge from '@/components/loading/uploadLoading';
+import { Plus, Trash } from 'lucide-react';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
@@ -50,7 +51,11 @@ const formSchema = z.object({
   description: z
     .string()
     .min(3, { message: 'Product description is required' }),
-  badge: z.string().min(1, { message: 'Please select a badge' })
+  shortDescription: z
+    .string()
+    .min(3, { message: 'Short description is required' }),
+  badge: z.string().min(1, { message: 'Please select a badge' }),
+  options: z.array(z.any()).optional()
 }).refine((data) => {
   if (data.discount === true) {
     return data.discountPrice >= 1
@@ -69,6 +74,7 @@ export const CreateProductForm = () => {
   const defaultValues = {
     name: '',
     description: '',
+    shortDescription: '',
     images: [],
     price: 1,
     availability: true,
@@ -82,8 +88,83 @@ export const CreateProductForm = () => {
     defaultValues
   });
 
+  const [optionsPreset, setOptionsPreset] = useState<any>([]);
+
+  const createOptionField = () => {
+    if (optionsPreset.length > 0 && optionsPreset[optionsPreset.length - 1].optionName === "") {
+      return
+    }
+
+    setOptionsPreset(
+      [
+        ...optionsPreset,
+        {
+          optionName: "",
+          optionValue: [
+            ""
+          ]
+        }
+      ]
+    )
+  }
+
+  const createOptionValueField = (index: number) => {
+    if (optionsPreset[index].optionValue.length > 0 && optionsPreset[index].optionValue[optionsPreset[index].optionValue.length - 1] === "") {
+      return
+    }
+
+    const updatedArray = [...optionsPreset]; // Create a copy
+    updatedArray[index].optionValue.push('');
+
+    setOptionsPreset(updatedArray)
+  }
+
+  const changeOptionsNameValues = (type: "parent" | "children", value: string, parentIndex: number, childrenIndex: number = 0) => {
+    const updatedArray = [...optionsPreset];
+    if (type === "parent") {
+      updatedArray[parentIndex].optionName = value;
+    } else {
+      updatedArray[parentIndex].optionValue[childrenIndex] = value;
+    }
+
+    setOptionsPreset(updatedArray)
+  }
+
+  function deleteOption(optionIndex: number) {
+    const filtered = optionsPreset.filter((_: any, index: number) => index !== optionIndex);
+    setOptionsPreset(filtered)
+  }
+
+  function deleteOptionValue(parentIndex: number, valueIndex: number) {
+    const updatedOptions = [...optionsPreset];
+    updatedOptions[parentIndex].optionValue.splice(valueIndex, 1);
+
+    if (updatedOptions[parentIndex].optionValue.length === 0) {
+      updatedOptions.splice(parentIndex, 1);
+    }
+
+    setOptionsPreset(updatedOptions)
+  }
+
+  useEffect(() => {
+    form.setValue('options', optionsPreset)
+  }, [optionsPreset])
 
   const onSubmit = async (dataValue: ProductFormValues) => {
+
+    const isOptionHasEmptyFields = optionsPreset.some((option: any) => {
+      return option.optionName === '' || option.optionValue.some((value: any) => value === '');
+    });
+
+    if (isOptionHasEmptyFields === true) {
+      toast({
+        variant: 'destructive',
+        title: 'Complete the form please.',
+        description: 'Options has empty fields.'
+      });
+
+      return
+    }
 
     setLoading(true);
 
@@ -98,7 +179,7 @@ export const CreateProductForm = () => {
       if (error) {
         toast({
           variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
+          title: 'Something went wrong.',
           description: 'There was a problem with your request.'
         });
 
@@ -119,6 +200,8 @@ export const CreateProductForm = () => {
         discountPrice: dataValue.discountPrice,
         badge: dataValue.badge,
         description: dataValue.description,
+        shortDescription: dataValue.shortDescription,
+        options: dataValue.options,
       }).select()
 
     if (error) {
@@ -281,6 +364,23 @@ export const CreateProductForm = () => {
 
             <FormField
               control={form.control}
+              name="shortDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Short Description</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete='false'
+                      placeholder="Product Short Description"
+                      {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="badge"
               render={({ field }) => (
                 <FormItem>
@@ -329,7 +429,56 @@ export const CreateProductForm = () => {
               )}
             />
 
-            <div className='flex justify-end'>
+            <div>
+              <h3 className='my-4 text-xl font-semibold'>Product Options</h3>
+              <div className='mb-2'>
+                <Button type='button' className="text-xs md:text-sm" onClick={() => createOptionField()}>
+                  <Plus className="w-4 h-4 mr-2" /> Add Options
+                </Button>
+              </div>
+
+              <div>
+                {optionsPreset.length > 0 &&
+                  <div className='space-y-2'>
+                    {/* change any later */}
+                    {optionsPreset.map((option: any, index: number) => (
+                      <div key={index} className='space-y-2'>
+                        <div className='flex items-center gap-2'>
+                          <Input
+                            value={option.optionName}
+                            onChange={(e) => changeOptionsNameValues("parent", e.target.value, index)}
+                            placeholder='option name'
+                          />
+                          <Button type='button' className="px-2 text-xs" onClick={() => createOptionValueField(index)}>
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                          <Button type='button' className="px-2 text-xs bg-red-600 hover:bg-red-600/90" onClick={() => deleteOption(index)}>
+                            <Trash className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className='ml-6 space-y-2'>
+                          {option.optionValue.map((value: string, valueIndex: number) => (
+                            <div key={valueIndex} className='flex items-center gap-2'>
+                              <Input
+                                value={value}
+                                onChange={(e) => changeOptionsNameValues("children", e.target.value, index, valueIndex)}
+                                placeholder='option value'
+                              />
+                              <Button type='button' className="px-2 text-xs bg-red-600 hover:bg-red-600/90" onClick={() => deleteOptionValue(index, valueIndex)}>
+                                <Trash className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div className='flex justify-end pt-6'>
               <Button disabled={loading} type="submit">
                 Create
               </Button>

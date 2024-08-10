@@ -9,4 +9,5 @@ export type ProductProps = {
   images: string[]
   name: string
   price: number
+  shortDescription: string
 };
