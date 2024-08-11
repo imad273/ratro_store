@@ -6,7 +6,6 @@ import { Accordion, Content, Tab, Trigger } from '@/components/ui/accordion'
 import { GridBeam } from "@/components/ui/gridBeam";
 import { ShinyTextButton } from "@/components/ui/shinyTextButton";
 import { ArrowRightIcon } from "lucide-react";
-import Image from "next/image";
 
 // Images
 import productImg1 from "@/assets/product-1.jpg";
@@ -19,6 +18,11 @@ import { Product } from "@/components";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import supabase from "@/lib/supabaseClient";
+import { ProductProps } from "@/types/products.types";
+import ProductFetchSkeleton from "@/components/loading/productFetchSkeleton";
+import { MdNearbyError } from "react-icons/md";
 
 export default function Home() {
   // FAQ Questions
@@ -32,7 +36,25 @@ export default function Home() {
       question: 'Who is behind this project?',
       answer: 'Dude named Luka Donadze (@lukachodonadze)'
     }
-  ]
+  ];
+
+  const [productsData, setProductsData] = useState<ProductProps[]>([])
+  const [loading, setIsLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select().eq('availability', true).limit(4)
+
+      if (!error) {
+        setProductsData(data);
+        setIsLoading(false)
+      }
+    }
+
+    fetchProducts();
+  }, [])
 
   return (
     <main>
@@ -63,24 +85,42 @@ export default function Home() {
       </section>
 
       <section className="blured py-3">
-        <h1 className="text-headingText text-4xl text-center font-semibold py-5">Trend Products</h1>
-
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-6">
-            <Product img={productImg1} name={"Unspel"} discount={false} discountPrice={0} price={29.99} />
-            <Product img={productImg2} name={"CyberEar"} discount={true} discountPrice={29.99} price={49.99} />
-            <Product img={productImg3} name={"Viseput"} discount={false} discountPrice={0} price={89.99} />
-            <Product img={productImg4} name={"Neon Pack"} discount={true} discountPrice={59.99} price={79.99} />
-          </div>
+          {loading ?
+            <ProductFetchSkeleton />
+            :
+            productsData.length === 0 ?
+              <div className="flex items-center justify-center min-h-[70vh] p-5">
+                <div className="text-center">
+                  <div className="inline-flex p-4 bg-yellow-100 rounded-full">
+                    <div className="p-4 bg-yellow-200 rounded-full text-yellow-600">
+                      <MdNearbyError size={36} />
+                    </div>
+                  </div>
+                  <h1 className="mt-5 text-3xl font-bold text-headingText lg:text-4xl">There is no products currently</h1>
+                  <p className="mt-5 text-sm text-slate-600">Any Products the store add will shown here</p>
+                </div>
+              </div>
+              :
+              <>
+                <h1 className="text-headingText text-4xl text-center font-semibold py-5">Trend Products</h1>
 
-          <div className="flex justify-end py-10">
-            <Link href="/products">
-              <ShinyTextButton className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-700 hover:duration-300">
-                <span>✨ See All Products</span>
-                <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-              </ShinyTextButton>
-            </Link>
-          </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-6">
+                  {productsData.map(product => (
+                    <Product key={product.id} productData={product} />
+                  ))}
+                </div>
+
+                <div className="flex justify-end py-10">
+                  <Link href="/products">
+                    <ShinyTextButton className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-700 hover:duration-300">
+                      <span>✨ See All Products</span>
+                      <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+                    </ShinyTextButton>
+                  </Link>
+                </div>
+              </>
+          }
         </div>
       </section>
 

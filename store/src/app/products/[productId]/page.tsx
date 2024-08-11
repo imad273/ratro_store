@@ -14,11 +14,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { IoIosArrowDown } from 'react-icons/io';
 import { FaCartShopping, FaTruckFast } from 'react-icons/fa6';
-import { ProductProps } from '@/types/product.types';
 import supabase from '@/lib/supabaseClient';
 import ProductPreviewSkeleton from '@/components/loading/productPreviewSkeleton';
 import TextSkeleton from '@/components/loading/textSkeleton';
 import { TbPackageOff } from 'react-icons/tb';
+import { ProductProps } from '@/types/products.types';
+import Link from 'next/link';
 
 interface Props {
   params: {
@@ -83,8 +84,8 @@ const page = ({ params }: Props) => {
                 }
 
                 <div className='py-3'>
-                  <p className='text-sm text-gray-700 custom-truncate'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde saepe totam reprehenderit ut laborum ratione alias doloribus?</p>
-                  <p className='text-main text-sm cursor-pointer font-semibold'>view all description</p>
+                  <p className='text-sm text-gray-700 custom-truncate'>{productData?.shortDescription}</p>
+                  <Link href="#description" className='text-main text-sm cursor-pointer font-semibold'>view all description</Link>
                 </div>
 
                 <div className='grid grid-cols-3 gap-2 py-3'>
@@ -116,38 +117,35 @@ const page = ({ params }: Props) => {
                   </div>
                 </div>
 
-                <div className='my-3'>
-                  <span>
-                    color
-                  </span>
-                  <div className='w-full mt-1'>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className='flex justify-between items-center w-full bg-gray-50'>
-                          Open
-                          <IoIosArrowDown />
-                        </Button>
-                      </DropdownMenuTrigger>
+                {productData?.options && productData?.options.length > 0 &&
+                  productData?.options.map((option, index) => (
+                    <div className='my-3' key={index}>
+                      <span>
+                        {option.optionName}
+                      </span>
+                      <div className='w-full mt-1'>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className='flex justify-between items-center w-full bg-gray-50'>
+                              Open
+                              <IoIosArrowDown />
+                            </Button>
+                          </DropdownMenuTrigger>
 
-                      <DropdownMenuContent className="w-full">
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem>
-                            <span>Blue</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <span>Yellow</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <span>Green</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <span>Black</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
+                          <DropdownMenuContent className="w-full">
+                            {option.optionValue.map((value, index) => (
+                              <DropdownMenuGroup key={index}>
+                                <DropdownMenuItem>
+                                  <span>{value}</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuGroup>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                  ))
+                }
 
                 <div className='my-3'>
                   <span>
@@ -171,7 +169,7 @@ const page = ({ params }: Props) => {
               </div>
             </div>
           </section>
-          <section className='min-h-screen container'>
+          <section className='min-h-screen container' id='description'>
             <div className='py-8'>
               <div className='font-semibold mb-2'>
                 <h3 className='inline text-headingText'>Shipping: </h3>
@@ -179,7 +177,7 @@ const page = ({ params }: Props) => {
                   Expect 2-4 weeks for items to arrive (to be safe).
                 </p>
               </div>
-              
+
               <div className='py-6' id='description' dangerouslySetInnerHTML={{ __html: productData !== undefined ? productData?.description : "" }}></div>
             </div>
           </section>
