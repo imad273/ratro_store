@@ -29,7 +29,8 @@ import FileUpload from '@/components/file-upload';
 import { RichTextInput } from '@/components/richTextEditor';
 import supabase from '@/lib/supabaseClient';
 import LoadingBadge from '@/components/loading/uploadLoading';
-import { ProductProps } from '@/types/products.types';
+import { optionProps, ProductProps } from '@/types/products.types';
+import { Plus, Trash } from 'lucide-react';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
@@ -55,7 +56,8 @@ const formSchema = z.object({
   shortDescription: z
     .string()
     .min(3, { message: 'Short description is required' }),
-  badge: z.string().min(1, { message: 'Please select a badge' })
+  badge: z.string().min(1, { message: 'Please select a badge' }),
+  options: z.array(z.any()).optional()
 }).refine((data) => {
   if (data.discount === true) {
     return data.discountPrice >= 1
@@ -104,12 +106,89 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
       form.setValue('discountPrice', productData?.discountPrice)
       form.setValue('badge', productData?.badge)
       form.setValue('shortDescription', productData?.shortDescription)
+      form.setValue('options', productData?.options)
+      setOptionsPreset(productData?.options)
       setLoading(false)
     }
-
   }, [productData])
 
+  const [optionsPreset, setOptionsPreset] = useState<optionProps[]>([]);
+
+  const createOptionField = () => {
+    if (optionsPreset.length > 0 && optionsPreset[optionsPreset.length - 1].optionName === "") {
+      return
+    }
+
+    setOptionsPreset(
+      [
+        ...optionsPreset,
+        {
+          optionName: "",
+          optionValue: [
+            ""
+          ]
+        }
+      ]
+    )
+  }
+
+  const createOptionValueField = (index: number) => {
+    if (optionsPreset[index].optionValue.length > 0 && optionsPreset[index].optionValue[optionsPreset[index].optionValue.length - 1] === "") {
+      return
+    }
+
+    const updatedArray = [...optionsPreset]; // Create a copy
+    updatedArray[index].optionValue.push('');
+
+    setOptionsPreset(updatedArray)
+  }
+
+  const changeOptionsNameValues = (type: "parent" | "children", value: string, parentIndex: number, childrenIndex: number = 0) => {
+    const updatedArray = [...optionsPreset];
+    if (type === "parent") {
+      updatedArray[parentIndex].optionName = value;
+    } else {
+      updatedArray[parentIndex].optionValue[childrenIndex] = value;
+    }
+
+    setOptionsPreset(updatedArray)
+  }
+
+  function deleteOption(optionIndex: number) {
+    const filtered = optionsPreset.filter((_: any, index: number) => index !== optionIndex);
+    setOptionsPreset(filtered)
+  }
+
+  function deleteOptionValue(parentIndex: number, valueIndex: number) {
+    const updatedOptions = [...optionsPreset];
+    updatedOptions[parentIndex].optionValue.splice(valueIndex, 1);
+
+    if (updatedOptions[parentIndex].optionValue.length === 0) {
+      updatedOptions.splice(parentIndex, 1);
+    }
+
+    setOptionsPreset(updatedOptions)
+  }
+
+  useEffect(() => {
+    form.setValue('options', optionsPreset)
+  }, [optionsPreset])
+
   const onSubmit = async (dataValue: ProductFormValues) => {
+    const isOptionHasEmptyFields = optionsPreset.some((option: any) => {
+      return option.optionName === '' || option.optionValue.some((value: any) => value === '');
+    });
+
+    if (isOptionHasEmptyFields === true) {
+      toast({
+        variant: 'destructive',
+        title: 'Complete the form please.',
+        description: 'Options has empty fields.'
+      });
+
+      return
+    }
+
     setLoading(true);
 
     if (dataValue?.images && productData) {
@@ -158,6 +237,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
               badge: dataValue.badge,
               description: dataValue.description,
               shortDescription: dataValue.shortDescription,
+              options: dataValue.options,
             })
             .eq('id', productId)
 
@@ -195,6 +275,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
         badge: dataValue.badge,
         description: dataValue.description,
         shortDescription: dataValue.shortDescription,
+        options: dataValue.options,
       })
       .eq('id', productId)
 
@@ -424,6 +505,54 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
                 </FormItem>
               )}
             />
+
+            <div>
+              <h3 className='my-4 text-xl font-semibold'>Product Options</h3>
+              <div className='mb-2'>
+                <Button type='button' className="text-xs md:text-sm" onClick={() => createOptionField()}>
+                  <Plus className="w-4 h-4 mr-2" /> Add Options
+                </Button>
+              </div>
+
+              <div>
+                {optionsPreset.length > 0 &&
+                  <div className='space-y-2'>
+                    {optionsPreset.map((option, index: number) => (
+                      <div key={index} className='space-y-2'>
+                        <div className='flex items-center gap-2'>
+                          <Input
+                            value={option.optionName}
+                            onChange={(e) => changeOptionsNameValues("parent", e.target.value, index)}
+                            placeholder='option name'
+                          />
+                          <Button type='button' className="px-2 text-xs" onClick={() => createOptionValueField(index)}>
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                          <Button type='button' className="px-2 text-xs bg-red-600 hover:bg-red-600/90" onClick={() => deleteOption(index)}>
+                            <Trash className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className='ml-6 space-y-2'>
+                          {option.optionValue.map((value: string, valueIndex: number) => (
+                            <div key={valueIndex} className='flex items-center gap-2'>
+                              <Input
+                                value={value}
+                                onChange={(e) => changeOptionsNameValues("children", e.target.value, index, valueIndex)}
+                                placeholder='option value'
+                              />
+                              <Button type='button' className="px-2 text-xs bg-red-600 hover:bg-red-600/90" onClick={() => deleteOptionValue(index, valueIndex)}>
+                                <Trash className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                }
+              </div>
+            </div>
 
             <div className='flex justify-end'>
               <Button disabled={loading} type="submit">

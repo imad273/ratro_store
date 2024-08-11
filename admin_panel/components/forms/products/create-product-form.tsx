@@ -29,6 +29,7 @@ import { RichTextInput } from '@/components/richTextEditor';
 import supabase from '@/lib/supabaseClient';
 import LoadingBadge from '@/components/loading/uploadLoading';
 import { Plus, Trash } from 'lucide-react';
+import { optionProps } from '@/types/products.types';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
@@ -88,7 +89,7 @@ export const CreateProductForm = () => {
     defaultValues
   });
 
-  const [optionsPreset, setOptionsPreset] = useState<any>([]);
+  const [optionsPreset, setOptionsPreset] = useState<optionProps[]>([]);
 
   const createOptionField = () => {
     if (optionsPreset.length > 0 && optionsPreset[optionsPreset.length - 1].optionName === "") {
@@ -440,8 +441,7 @@ export const CreateProductForm = () => {
               <div>
                 {optionsPreset.length > 0 &&
                   <div className='space-y-2'>
-                    {/* change any later */}
-                    {optionsPreset.map((option: any, index: number) => (
+                    {optionsPreset.map((option, index: number) => (
                       <div key={index} className='space-y-2'>
                         <div className='flex items-center gap-2'>
                           <Input
