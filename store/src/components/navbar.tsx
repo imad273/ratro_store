@@ -5,11 +5,18 @@ import Image from "next/image"
 import LOGO from "@/assets/RATRO-logo.png"
 import { IoBagHandleOutline } from "react-icons/io5"
 import { RiMenu3Line } from "react-icons/ri"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IoMdClose } from "react-icons/io"
+import useCart from "@/zustand/cart"
 
 export default function NavBar() {
   const [phoneMenu, setPhoneMenu] = useState(false);
+
+  const { productsCart } = useCart();
+
+  useEffect(() => {
+    console.log(productsCart.length);
+  }, [productsCart])
 
   return (
     <nav className="shadow">
@@ -37,10 +44,14 @@ export default function NavBar() {
               <Link href="/#faq" className="text-gray-500 hover:text-main duration-300 font-semibold">
                 FAQ
               </Link>
-
             </nav>
 
-            <Link href="/cart" className="bg-main hover:bg-mainHover duration-300 shadow-md shadow-main/50 border-none rounded-xl text-white p-2.5">
+            <Link href="/cart" className="relative bg-main hover:bg-mainHover duration-300 shadow-md shadow-main/50 border-none rounded-xl text-white p-2.5">
+              {productsCart.length > 0 &&
+                <div className="absolute flex justify-center items-center text-xs bg-red-600 text-white -right-2 -top-2 w-5 h-5 rounded-full">
+                  {productsCart.length}
+                </div>
+              }
               <IoBagHandleOutline size={21} />
             </Link>
 

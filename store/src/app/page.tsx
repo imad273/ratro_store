@@ -23,6 +23,7 @@ import supabase from "@/lib/supabaseClient";
 import { ProductProps } from "@/types/products.types";
 import ProductFetchSkeleton from "@/components/loading/productFetchSkeleton";
 import { MdNearbyError } from "react-icons/md";
+import useCart from "@/zustand/cart";
 
 export default function Home() {
   // FAQ Questions

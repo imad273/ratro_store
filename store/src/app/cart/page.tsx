@@ -1,11 +1,31 @@
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
 import { FaTrashAlt } from 'react-icons/fa'
 import Image from "next/image";
 import productImg1 from "@/assets/product-1.jpg";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import useCart from '@/zustand/cart';
 
 const page = () => {
+  const { productsCart, removeItem } = useCart();
+
+  useEffect(() => {
+    console.log(productsCart);
+  }, [productsCart])
+
+  const remove = (id: number) => {
+    const storedCart = localStorage.getItem('cart');
+
+    if (storedCart) {
+      let parse = JSON.parse(storedCart);
+      const newCartData = parse.filter((item: any) => item.product.id !== id)
+      localStorage.setItem('cart', JSON.stringify(newCartData));
+    }
+
+    removeItem(id)
+  }
+
   return (
     <main>
       <section className='min-h-screen md:grid md:grid-cols-3 gap-5 container py-8'>
@@ -30,8 +50,47 @@ const page = () => {
 
           <hr className="h-px my-3 bg-gray-300 border-none" />
 
+          <>
+            {productsCart.map(product => (
+              <div key={product.product.id}>
+                <div>
+                  <div className="grid grid-cols-4 md:grid-cols-5 gap-2 items-center w-full">
+                    <div className='col-span-2'>
+                      <div className='flex items-center gap-3'>
+                        <img src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${product.product.images[0]}`} className='w-20 h-16 rounded-md' alt="product" />
+
+                        <div>
+                          <h3 className='text-headingText font-semibold'>{product.product.name}</h3>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className='inline-flex items-center py-1.5 border rounded-md'>
+                        <div className='px-3 md:px-4 text-base md:text-xl text-headingText font-semibold rounded-r-md cursor-pointer'>-</div>
+                        <div className='px-4 md:px-5 h-full text-headingText font-semibold'>{product.quantity}</div>
+                        <div className='px-3 md:px-4 text-base md:text-xl text-headingText font-semibold rounded-l-md cursor-pointer'>+</div>
+                      </div>
+                    </div>
+
+                    <div className='text-headingText font-semibold text-center'>
+                      ${product.product.discount ? product.product.discountPrice : product.product.price}
+                    </div>
+                  </div>
+
+                  <div onClick={() => remove(product.product.id)} className='text-sm md:text-base my-3 inline-flex items-center gap-2 text-red-500 font-semibold cursor-pointer'>
+                    <FaTrashAlt />
+                    remove
+                  </div>
+                </div>
+                <hr className="h-px my-3 bg-gray-300 border-none" />
+              </div>
+            ))}
+          </>
+
           <div>
-            <div className="grid grid-cols-4 md:grid-cols-5 gap-2 items-center w-full">
+
+            {/* <div className="grid grid-cols-4 md:grid-cols-5 gap-2 items-center w-full">
               <div className='col-span-2'>
                 <div className='flex items-center gap-3'>
                   <Image src={productImg1} className='w-20' alt="product" />
@@ -60,46 +119,8 @@ const page = () => {
             <div className='text-sm md:text-base my-3 inline-flex items-center gap-2 text-red-500 font-semibold cursor-pointer'>
               <FaTrashAlt />
               remove
-            </div>
+            </div> */}
           </div>
-
-          <hr className="h-px my-3 bg-gray-300 border-none" />
-
-          <div>
-
-            <div className="grid grid-cols-4 md:grid-cols-5 gap-2 items-center w-full">
-              <div className='col-span-2'>
-                <div className='flex items-center gap-3'>
-                  <Image src={productImg1} className='w-20' alt="product" />
-
-                  <div>
-                    <h3 className='text-lg md:text-xl text-headingText'>Unspel</h3>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div>
-                  <div className='inline-flex items-center py-1.5 border rounded-md'>
-                    <div className='px-3 md:px-4 text-base md:text-xl text-headingText font-semibold rounded-r-md cursor-pointer'>-</div>
-                    <div className='px-4 md:px-5 h-full text-headingText font-semibold'>1</div>
-                    <div className='px-3 md:px-4 text-base md:text-xl text-headingText font-semibold rounded-l-md cursor-pointer'>+</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className='text-headingText font-semibold text-center'>
-                $25
-              </div>
-            </div>
-
-            <div className='text-sm md:text-base my-3 inline-flex items-center gap-2 text-red-500 font-semibold cursor-pointer'>
-              <FaTrashAlt />
-              remove
-            </div>
-          </div>
-
-          <hr className="h-px my-3 bg-gray-300 border-none" />
         </div>
 
         <div>

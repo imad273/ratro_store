@@ -20,6 +20,8 @@ import TextSkeleton from '@/components/loading/textSkeleton';
 import { TbPackageOff } from 'react-icons/tb';
 import { ProductProps } from '@/types/products.types';
 import Link from 'next/link';
+import useCart from '@/zustand/cart';
+import { toast } from '@/components/ui/use-toast';
 
 interface Props {
   params: {
@@ -38,7 +40,6 @@ const page = ({ params }: Props) => {
         .select()
         .eq('id', params.productId)
 
-      console.log(error);
       if (!error) {
         setProductData(data[0]);
         setIsLoading(false)
@@ -48,9 +49,38 @@ const page = ({ params }: Props) => {
     fetchProducts();
   }, [])
 
-  useEffect(() => {
-    console.log(productData);
-  }, [productData])
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const { productsCart, addItem } = useCart();
+
+  const handleAddToCart = (product: ProductProps) => {
+    let productAlreadyIn = productsCart.some(item => item.product.id === product.id);
+    if (productAlreadyIn === true) {
+      toast({
+        variant: 'destructive',
+        title: 'Product already in cart.',
+        description: 'Visit the cart page to check it'
+      });
+
+      return
+    }
+
+    addItem(product, quantity);
+
+    localStorage.setItem('cart', JSON.stringify([
+      ...productsCart,
+      {
+        product: product,
+        quantity: quantity
+      }
+    ]));
+
+    toast({
+      variant: 'success',
+      title: 'Product Added to the cart',
+      description: 'Visit the cart page to check it out'
+    });
+  };
 
   return (
     <main>
@@ -153,15 +183,15 @@ const page = ({ params }: Props) => {
                   </span>
                   <div>
                     <div className='inline-flex items-center my-1 py-2 border rounded-md'>
-                      <div className='px-5 text-xl text-headingText font-semibold rounded-r-md cursor-pointer'>-</div>
-                      <div className='px-5 h-full text-headingText font-semibold'>1</div>
-                      <div className='px-5 text-xl text-headingText font-semibold rounded-l-md cursor-pointer'>+</div>
+                      <div className='px-5 text-xl text-headingText font-semibold rounded-r-md cursor-pointer' onClick={() => setQuantity(quantity - 1)}>-</div>
+                      <div className='px-5 h-full text-headingText font-semibold'>{quantity}</div>
+                      <div className='px-5 text-xl text-headingText font-semibold rounded-l-md cursor-pointer' onClick={() => setQuantity(quantity + 1)}>+</div>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <Button disabled={!productData?.availability} className='w-full gap-2'>
+                  <Button onClick={() => productData && handleAddToCart(productData)} disabled={!productData?.availability} className='w-full gap-2'>
                     <FaCartShopping />
                     Add To Cart
                   </Button>

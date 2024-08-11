@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import { BiSolidMedal, BiSolidPurchaseTag } from 'react-icons/bi'
-import { ProductProps } from '@/types/product.types'
+import { ProductProps } from '@/types/products.types'
 
 interface Props {
   productData: ProductProps
