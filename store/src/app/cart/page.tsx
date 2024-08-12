@@ -45,7 +45,22 @@ const page = () => {
     }
 
     updateQuantity(productId, action)
+  }
 
+  const calculateSubtotal = () => {
+    const subtotal = productsCart.reduce((total, product) => {
+      if (product.product.discount === true) {
+        return total + product.product.discountPrice * product.quantity;
+      }
+
+      return total + product.product.price * product.quantity;
+    }, 0);
+
+    return subtotal;
+  }
+
+  const calculateTotal = () => {
+    return calculateSubtotal();
   }
 
   return (
@@ -57,7 +72,7 @@ const page = () => {
         </section>
         :
         productsCart.length === 0 ?
-          <EmptyProducts from='cart'/>
+          <EmptyProducts from='cart' />
           :
           <section className='min-h-screen md:grid md:grid-cols-3 gap-5 container py-8'>
             <div className='flex flex-col col-span-2'>
@@ -105,7 +120,7 @@ const page = () => {
                         </div>
 
                         <div className='text-headingText font-semibold text-center'>
-                          ${product.product.discount ? product.product.discountPrice : product.product.price}
+                          ${product.product.discount ? product.product.discountPrice * product.quantity : product.product.price * product.quantity}
                         </div>
                       </div>
 
@@ -118,50 +133,20 @@ const page = () => {
                   </div>
                 ))}
               </>
-
-              <div>
-
-                {/* <div className="grid grid-cols-4 md:grid-cols-5 gap-2 items-center w-full">
-              <div className='col-span-2'>
-                <div className='flex items-center gap-3'>
-                  <Image src={productImg1} className='w-20' alt="product" />
-
-                  <div>
-                    <h3 className='text-lg md:text-xl text-headingText'>Unspel</h3>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div>
-                  <div className='inline-flex items-center py-1.5 border rounded-md'>
-                    <div className='px-3 md:px-4 text-base md:text-xl text-headingText font-semibold rounded-r-md cursor-pointer'>-</div>
-                    <div className='px-4 md:px-5 h-full text-headingText font-semibold'>1</div>
-                    <div className='px-3 md:px-4 text-base md:text-xl text-headingText font-semibold rounded-l-md cursor-pointer'>+</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className='text-headingText font-semibold text-center'>
-                $25
-              </div>
-            </div>
-
-            <div className='text-sm md:text-base my-3 inline-flex items-center gap-2 text-red-500 font-semibold cursor-pointer'>
-              <FaTrashAlt />
-              remove
-            </div> */}
-              </div>
             </div>
 
             <div>
               <div className='border rounded-md px-4 py-3'>
                 <div className='flex justify-between items-center'>
                   <h3 className='text-gray-500 font-semibold'>Subtotal</h3>
-                  <p className='font-semibold text-headingText'>$25</p>
+                  <p className='font-semibold text-headingText'>${calculateSubtotal()}</p>
                 </div>
                 <div className='flex justify-between items-center'>
                   <h3 className='text-gray-500 font-semibold'>Shipping</h3>
+                  <p className='font-semibold text-headingText'>$0</p>
+                </div>
+                <div className='flex justify-between items-center'>
+                  <h3 className='text-gray-500 font-semibold'>Tax</h3>
                   <p className='font-semibold text-headingText'>$0</p>
                 </div>
                 <div className='py-3'>
@@ -174,14 +159,14 @@ const page = () => {
 
                 <div className='flex justify-between items-center pt-1'>
                   <h3 className='text-gray-500 font-semibold'>Discount</h3>
-                  <p className='font-semibold text-headingText'>$5</p>
+                  <p className='font-semibold text-headingText'>$0</p>
                 </div>
 
                 <hr className="h-px my-3 bg-gray-300 border-none" />
 
                 <div className='flex justify-between items-center'>
                   <h3 className='text-gray-500 font-semibold'>Total</h3>
-                  <p className='font-semibold text-headingText'>$20</p>
+                  <p className='font-semibold text-headingText'>${calculateTotal()}</p>
                 </div>
 
                 <div className='pt-3'>
