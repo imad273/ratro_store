@@ -173,7 +173,7 @@ const StoreSettingsForm = () => {
 
             <div className='flex justify-end pt-6'>
               <Button disabled={loading} type="submit">
-                save
+                Save
               </Button>
             </div>
           </form>
