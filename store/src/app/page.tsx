@@ -24,6 +24,7 @@ import { ProductProps } from "@/types/products.types";
 import ProductFetchSkeleton from "@/components/loading/productFetchSkeleton";
 import { MdNearbyError } from "react-icons/md";
 import useCart from "@/zustand/cart";
+import EmptyProducts from "@/components/emptyAlerts/EmptyProducts";
 
 export default function Home() {
   // FAQ Questions
@@ -91,17 +92,7 @@ export default function Home() {
             <ProductFetchSkeleton />
             :
             productsData.length === 0 ?
-              <div className="flex items-center justify-center min-h-[70vh] p-5">
-                <div className="text-center">
-                  <div className="inline-flex p-4 bg-yellow-100 rounded-full">
-                    <div className="p-4 bg-yellow-200 rounded-full text-yellow-600">
-                      <MdNearbyError size={36} />
-                    </div>
-                  </div>
-                  <h1 className="mt-5 text-3xl font-bold text-headingText lg:text-4xl">There is no products currently</h1>
-                  <p className="mt-5 text-sm text-slate-600">Any Products the store add will shown here</p>
-                </div>
-              </div>
+              <EmptyProducts from="products"/>
               :
               <>
                 <h1 className="text-headingText text-4xl text-center font-semibold py-5">Trend Products</h1>

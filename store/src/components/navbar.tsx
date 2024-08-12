@@ -14,10 +14,6 @@ export default function NavBar() {
 
   const { productsCart } = useCart();
 
-  useEffect(() => {
-    console.log(productsCart.length);
-  }, [productsCart])
-
   return (
     <nav className="shadow">
       <div className="container">

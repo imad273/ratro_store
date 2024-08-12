@@ -12,7 +12,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { addItem } = useCart();
+  const { addItem, setIsLoading } = useCart();
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
@@ -24,6 +24,8 @@ export default function RootLayout({
         addItem(product.product, product.quantity)
       ))
     }
+
+    setIsLoading(false)
   }, []);
 
   return (
