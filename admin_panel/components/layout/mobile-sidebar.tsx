@@ -29,9 +29,9 @@ export function MobileSidebar({ className }: SidebarProps) {
       icon: 'ShoppingCart',
     },
     {
-      title: 'Users',
-      href: '/dashboard/user',
-      icon: 'user',
+      title: 'Settings',
+      href: '/dashboard/settings',
+      icon: 'settings',
     }
   ];
   
