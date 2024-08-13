@@ -2,14 +2,20 @@
 
 import LoadingBadge from '@/components/loading/uploadLoading';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
 import supabase from '@/lib/supabaseClient';
 import { StoreSettingsFormValues } from '@/types/settings.type';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod'
@@ -74,6 +80,7 @@ const StoreSettingsForm = () => {
       .update({
         promotionSign: dataValue.promotionSign,
         promotionSignText: dataValue.promotionSignText,
+        showUnavailableProduct: dataValue.showUnavailableProduct,
       }).eq('id', 1)
     // 1 is the id the settings row, which is the first of course
 
@@ -109,18 +116,17 @@ const StoreSettingsForm = () => {
                 name="promotionSign"
                 render={({ field }) => (
                   <FormItem>
-                    <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-3 py-2'>
                       <FormControl>
-                        <Checkbox
+                        <Switch
                           id='promotionSign'
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
-
                       </FormControl>
                       <label
                         htmlFor="promotionSign"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         Promotion Sign
                       </label>
@@ -144,23 +150,23 @@ const StoreSettingsForm = () => {
                 )}
               />
 
+
               <FormField
                 control={form.control}
                 name="showUnavailableProduct"
                 render={({ field }) => (
                   <FormItem>
-                    <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-3 py-2'>
                       <FormControl>
-                        <Checkbox
+                        <Switch
                           id='showUnavailableProduct'
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
-
                       </FormControl>
                       <label
                         htmlFor="showUnavailableProduct"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         Show Unavailable Product
                       </label>
@@ -169,6 +175,7 @@ const StoreSettingsForm = () => {
                   </FormItem>
                 )}
               />
+
             </div>
 
             <div className='flex justify-end pt-6'>

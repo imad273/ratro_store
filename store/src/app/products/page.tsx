@@ -1,28 +1,31 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import productImg1 from "@/assets/product-1.jpg";
-import productImg2 from "@/assets/product-2.jpg";
-import productImg3 from "@/assets/product-3.jpg";
-import productImg4 from "@/assets/product-4.jpg";
 import { Product } from '@/components';
 import supabase from '@/lib/supabaseClient';
 import ProductFetchSkeleton from '@/components/loading/productFetchSkeleton';
 import { ProductProps } from '@/types/products.types';
-import { MdNearbyError } from 'react-icons/md';
 import EmptyProducts from '@/components/emptyAlerts/EmptyProducts';
+import useSettings from '@/zustand/settings';
 
 const page = () => {
   const [productsData, setProductsData] = useState<ProductProps[]>([])
   const [loading, setIsLoading] = useState<boolean>(true)
 
+  const { settings } = useSettings();
+
   useEffect(() => {
     const fetchProducts = async () => {
+
       const { data, error } = await supabase
         .from('products')
         .select()
 
       if (!error) {
-        setProductsData(data);
+        settings?.showUnavailableProduct === true ?
+          setProductsData(data)
+          :
+          setProductsData(data.filter((product) => product.availability))
+
         setIsLoading(false)
       }
     }
@@ -53,12 +56,12 @@ const page = () => {
             <ProductFetchSkeleton />
             :
             productsData?.length === 0 ?
-              <EmptyProducts from='products'/>
+              <EmptyProducts from='products' />
               :
               <>
                 <h1 className="text-headingText text-4xl text-center font-semibold py-5">All Products</h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 py-6">
                   {productsData.map(product => (
                     <Product key={product.id} productData={product} />
                   ))}

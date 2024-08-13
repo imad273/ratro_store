@@ -92,7 +92,7 @@ export default function Home() {
             <ProductFetchSkeleton />
             :
             productsData.length === 0 ?
-              <EmptyProducts from="products"/>
+              <EmptyProducts from="products" />
               :
               <>
                 <h1 className="text-headingText text-4xl text-center font-semibold py-5">Trend Products</h1>
