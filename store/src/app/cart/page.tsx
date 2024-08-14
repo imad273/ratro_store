@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import useCart from '@/zustand/cart';
 import ProductPreviewSkeleton from '@/components/loading/productPreviewSkeleton';
 import EmptyProducts from '@/components/emptyAlerts/EmptyProducts';
+import Link from 'next/link';
 
 const page = () => {
   const { isLoading, productsCart, removeItem, updateQuantity } = useCart();
@@ -170,7 +171,9 @@ const page = () => {
                 </div>
 
                 <div className='pt-3'>
-                  <Button className='w-full'>Checkout</Button>
+                  <Link href="/checkout">
+                    <Button className='w-full'>Checkout</Button>
+                  </Link>
                 </div>
               </div>
             </div>
