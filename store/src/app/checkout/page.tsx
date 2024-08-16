@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -17,6 +17,10 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import useCart from '@/zustand/cart';
 import { LockKeyhole } from 'lucide-react';
+import supabase from '@/lib/supabaseClient';
+import { toast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+import LoadingBadge from '@/components/loading/uploadLoading';
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -51,12 +55,19 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>;
 
 const page = () => {
+  const router = useRouter();
+
+  const countries = [
+    "Canada",
+    "United state",
+    "Australia",
+  ];
 
   const defaultValues = {
     fullName: '',
     emailAddress: '',
     phoneNumber: '',
-    country: '',
+    country: countries[0],
     streetAddress: '',
     city: '',
     state: '',
@@ -68,11 +79,7 @@ const page = () => {
     defaultValues
   });
 
-  const { isLoading, productsCart } = useCart();
-
-  const onSubmit = async (dataValue: ProductFormValues) => {
-
-  }
+  const { productsCart } = useCart();
 
   const calculateSubtotal = () => {
     const subtotal = productsCart.reduce((total, product) => {
@@ -90,13 +97,52 @@ const page = () => {
     return calculateSubtotal();
   }
 
+  const [loading, setLoading] = useState(false)
+
+  const onSubmit = async (dataValue: ProductFormValues) => {
+    setLoading(true)
+
+    const { data, error } = await supabase
+      .from('orders')
+      .insert({
+        order_status: "pending",
+        customer_name: dataValue.fullName,
+        customer_email: dataValue.emailAddress,
+        customer_phone_number: dataValue.phoneNumber,
+        customer_country: dataValue.country,
+        shipping_address: dataValue.streetAddress,
+        customer_city: dataValue.city,
+        customer_state: dataValue.state,
+        customer_zipcode: dataValue.zipCode,
+        /* payment_method: dataValue., */
+        products: productsCart,
+        total_amount: calculateTotal(),
+        discount: 0,
+      }).select()
+
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Something went wrong.',
+        description: 'There was a problem with your request.'
+      });
+      return
+    } else {
+      router.push(`/checkout/pay/${data[0].id}`)
+    }
+
+    setLoading(false);
+  }
+
   return (
     <section className="min-h-screen container py-3">
       <h1 className='text-3xl font-bold py-2 text-headingText'>Checkout</h1>
       <div className='flex flex-col-reverse md:grid md:grid-cols-3 gap-3'>
         <div className='col-span-2'>
           <div className="flex">
-            <div>
+            <div className='relative'>
+              {loading && <LoadingBadge />}
+
               <h3 className='font-semibold'>Shipping information</h3>
 
               <div className="py-2">
@@ -176,15 +222,11 @@ const page = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="none">
-                                United state
-                              </SelectItem>
-                              <SelectItem value="Best seller">
-                                Canada
-                              </SelectItem>
-                              <SelectItem value="new">
-                                Australia
-                              </SelectItem>
+                              {countries.map(country => (
+                                <SelectItem key={country} value={country}>
+                                  {country}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -260,8 +302,8 @@ const page = () => {
                       />
                     </div>
 
-                    <Button>
-                      check
+                    <Button className='w-full'>
+                      Pay now
                     </Button>
                   </form>
                 </Form>

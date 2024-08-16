@@ -1,7 +1,6 @@
 'use client';
 import { CellAction } from './cell-action';
-import { OrderProps } from '@/types/orders.types';
-import { Input } from '@/components/ui/input';
+import { OrdersProps } from '@/types/orders.types';
 import {
   Table,
   TableBody,
@@ -11,36 +10,47 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
 
 interface TableProps {
-  data: OrderProps[];
+  data: OrdersProps[];
+  setOrdersData: React.Dispatch<React.SetStateAction<OrdersProps[]>>;
 }
 
 const OrdersTable = ({ data }: TableProps) => {
 
   const columns: any[] = [
     {
-      header: 'Name'
+      header: 'Order id'
     },
     {
-      header: 'Price'
+      header: 'Total'
     },
     {
-      header: 'Status',
+      header: 'Status'
     },
     {
-      header: 'Actions',
+      header: 'Customer Name',
+    },
+    {
+      header: 'Customer Email',
+    },
+    {
+      header: 'Country',
+    },
+    {
+      header: 'Address',
+    },
+    {
+      header: 'Products',
     }
   ];
 
   return (
     <>
-      <Input
+      {/* <Input
         placeholder={`Search Products...`}
-        value={''}
         className="w-full md:max-w-sm"
-      />
+      /> */}
 
       <ScrollArea className="h-[calc(80vh-220px)] rounded-md border md:h-[calc(80dvh-200px)]">
         <Table className="relative">
@@ -59,7 +69,7 @@ const OrdersTable = ({ data }: TableProps) => {
                 <TableRow
                   key={product.id}
                 >
-                  <TableCell>
+                  {/* <TableCell>
                     {product.name}
                   </TableCell>
                   <TableCell>
@@ -70,7 +80,7 @@ const OrdersTable = ({ data }: TableProps) => {
                   </TableCell>
                   <TableCell>
                     <CellAction />
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))
               :
@@ -87,7 +97,7 @@ const OrdersTable = ({ data }: TableProps) => {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="flex items-center justify-end py-4 space-x-2">
+      {/* <div className="flex items-center justify-end py-4 space-x-2">
         <div className="flex-1 text-sm text-muted-foreground">
           {data.length} of{' '}
           {10} row(s) selected.
@@ -106,7 +116,7 @@ const OrdersTable = ({ data }: TableProps) => {
             Next
           </Button>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }
