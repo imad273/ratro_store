@@ -20,6 +20,9 @@ const page = () => {
 
   const [productsData, setProductsData] = useState<ProductProps[]>([])
   const [loading, setIsLoading] = useState<boolean>(true)
+  useEffect(() => {
+    console.log("sjsjsj");
+  }, [])
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -55,7 +58,7 @@ const page = () => {
       {loading ?
         <TableSkeleton />
         :
-        <ProductsTable data={productsData} setProductsData={setProductsData}/>
+        <ProductsTable data={productsData} setProductsData={setProductsData} />
       }
     </div>
   )
