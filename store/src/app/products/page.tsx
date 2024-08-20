@@ -7,7 +7,7 @@ import { ProductProps } from '@/types/products.types';
 import EmptyProducts from '@/components/emptyAlerts/EmptyProducts';
 import useSettings from '@/zustand/settings';
 
-const page = () => {
+const Page = () => {
   const [productsData, setProductsData] = useState<ProductProps[]>([])
   const [loading, setIsLoading] = useState<boolean>(true)
 
@@ -74,4 +74,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

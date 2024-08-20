@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react'
 import { FaCheck } from 'react-icons/fa'
 
-const page = () => {
+const Page = () => {
   const { productsCart, removeItem } = useCart();
 
   const searchParams = useSearchParams();
@@ -16,6 +16,10 @@ const page = () => {
   useEffect(() => {
     const status = searchParams.get("redirect_status");
     const orderID = searchParams.get("orderId");
+
+    /* 
+      TODO: check if order id is valid and it's not paid
+    */
 
     const updateStatus = async () => {
       const { error } = await supabase
@@ -61,4 +65,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

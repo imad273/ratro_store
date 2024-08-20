@@ -9,7 +9,7 @@ import ProductPreviewSkeleton from '@/components/loading/productPreviewSkeleton'
 import EmptyProducts from '@/components/emptyAlerts/EmptyProducts';
 import Link from 'next/link';
 
-const page = () => {
+const Page = () => {
   const { isLoading, productsCart, removeItem, updateQuantity } = useCart();
 
   let storedCart: any = "";
@@ -183,4 +183,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

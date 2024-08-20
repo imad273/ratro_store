@@ -29,7 +29,7 @@ interface Props {
   }
 }
 
-const page = ({ params }: Props) => {
+const Page = ({ params }: Props) => {
   const [productData, setProductData] = useState<ProductProps>()
   const [loading, setIsLoading] = useState<boolean>(true)
 
@@ -217,4 +217,4 @@ const page = ({ params }: Props) => {
   )
 }
 
-export default page
+export default Page

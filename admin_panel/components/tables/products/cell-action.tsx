@@ -12,11 +12,10 @@ import supabase from '@/lib/supabaseClient';
 import { ProductProps } from '@/types/products.types';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface Props {
-  id: number
+  id: string
   images: string[]
   data: ProductProps[]
   setProductsData: React.Dispatch<React.SetStateAction<ProductProps[]>>

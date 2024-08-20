@@ -7,12 +7,6 @@ import { GridBeam } from "@/components/ui/gridBeam";
 import { ShinyTextButton } from "@/components/ui/shinyTextButton";
 import { ArrowRightIcon } from "lucide-react";
 
-// Images
-import productImg1 from "@/assets/product-1.jpg";
-import productImg2 from "@/assets/product-2.jpg";
-import productImg3 from "@/assets/product-3.jpg";
-import productImg4 from "@/assets/product-4.jpg";
-
 import { Button } from "@/components/ui/button"
 import { Product } from "@/components";
 import { Input } from "@/components/ui/input";
@@ -22,8 +16,6 @@ import { useEffect, useState } from "react";
 import supabase from "@/lib/supabaseClient";
 import { ProductProps } from "@/types/products.types";
 import ProductFetchSkeleton from "@/components/loading/productFetchSkeleton";
-import { MdNearbyError } from "react-icons/md";
-import useCart from "@/zustand/cart";
 import EmptyProducts from "@/components/emptyAlerts/EmptyProducts";
 
 export default function Home() {

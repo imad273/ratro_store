@@ -33,11 +33,6 @@ export default function page() {
     fetchOrders();
   }, [])
 
-  useEffect(() => {
-    console.log(ordersData);
-  }, [ordersData])
-
-
   return (
     <div className="space-y-2">
       <Breadcrumbs items={breadcrumbItems} />

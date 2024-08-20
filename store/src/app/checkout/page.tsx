@@ -54,7 +54,7 @@ const formSchema = z.object({
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
 
   const countries = [
@@ -379,4 +379,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

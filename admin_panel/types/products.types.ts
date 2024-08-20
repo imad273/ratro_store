@@ -1,5 +1,5 @@
 export type ProductProps = {
-  id: number
+  id: string
   availability: boolean
   badge: string
   created_at: string

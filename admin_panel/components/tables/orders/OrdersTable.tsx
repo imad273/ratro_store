@@ -16,11 +16,11 @@ interface TableProps {
   setOrdersData: React.Dispatch<React.SetStateAction<OrdersProps[]>>;
 }
 
-const OrdersTable = ({ data }: TableProps) => {
+const OrdersTable = ({ data, setOrdersData }: TableProps) => {
 
   const columns: any[] = [
     {
-      header: 'Order id'
+      header: 'Order number'
     },
     {
       header: 'Total'
@@ -29,10 +29,10 @@ const OrdersTable = ({ data }: TableProps) => {
       header: 'Status'
     },
     {
-      header: 'Customer Name',
+      header: 'Customer Email',
     },
     {
-      header: 'Customer Email',
+      header: 'Customer Name',
     },
     {
       header: 'Country',
@@ -52,7 +52,7 @@ const OrdersTable = ({ data }: TableProps) => {
         className="w-full md:max-w-sm"
       /> */}
 
-      <ScrollArea className="h-[calc(80vh-220px)] rounded-md border md:h-[calc(80dvh-200px)]">
+      <ScrollArea className="h-[calc(85vh-220px)] rounded-md border md:h-[65vh]">
         <Table className="relative">
           <TableHeader>
             <TableRow>
@@ -65,22 +65,46 @@ const OrdersTable = ({ data }: TableProps) => {
           </TableHeader>
           <TableBody>
             {data.length !== 0 ?
-              data.map((product) => (
+              data.map((order) => (
                 <TableRow
-                  key={product.id}
+                  key={order.id}
                 >
-                  {/* <TableCell>
-                    {product.name}
+                  <TableCell>
+                    {order.order_number}
                   </TableCell>
                   <TableCell>
-                    {product.price}
+                    ${order.total_amount}
                   </TableCell>
                   <TableCell>
-                    {product.status}
+                    {order.order_status === "pending" ?
+                      <p className='font-semibold text-amber-500'>
+                        {order.order_status}
+                      </p>
+                      :
+                      <p className='font-semibold text-green-500'>
+                        {order.order_status}
+                      </p>
+                    }
+                  </TableCell>
+
+                  <TableCell>
+                    {order.customer_email}
                   </TableCell>
                   <TableCell>
-                    <CellAction />
-                  </TableCell> */}
+                    {order.customer_name}
+                  </TableCell>
+                  <TableCell>
+                    {order.customer_country}
+                  </TableCell>
+                  <TableCell>
+                    {order.shipping_address}
+                  </TableCell>
+                  <TableCell>
+                    {order.products.length}
+                  </TableCell>
+                  <TableCell>
+                    <CellAction data={data} setOrdersData={setOrdersData} id={order.id} />
+                  </TableCell>
                 </TableRow>
               ))
               :

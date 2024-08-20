@@ -42,10 +42,6 @@ const page = ({ params }: { params: { productId: string } }) => {
     fetchProduct()
   }, [])
 
-/*   useEffect(() => {
-    console.log(productData);
-  }, [productData]) */
-
   return (
     <div className="space-y-4">
       <Breadcrumbs items={breadcrumbItems} />

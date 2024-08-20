@@ -75,7 +75,7 @@ export default function StripeCheckoutForm({ orderData }: { orderData: OrdersPro
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `http://localhost:3000/checkout/success?orderId=${orderData?.id}`,
+        return_url: `/checkout/success?orderId=${orderData?.id}`,
       },
     });
 

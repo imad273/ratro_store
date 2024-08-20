@@ -14,9 +14,13 @@ if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
-const page = ({ params }: { params: { orderId: string } }) => {
+const Page = ({ params }: { params: { orderId: string } }) => {
 
   const [orderData, setOrderData] = useState<OrdersProps>();
+
+  /* 
+    TODO: check if order id is valid and it's not paid 
+  */
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -51,13 +55,19 @@ const page = ({ params }: { params: { orderId: string } }) => {
 
   const options = {
     clientSecret,
-    theme: 'stripe',
+    appearance: {
+      theme: 'flat',
+      variables: {
+        colorPrimary: '#3c10cc',
+      }
+    }
   };
 
   return (
     <section className='min-h-[85vh] container flex justify-center items-center'>
       <div className='w-full md:w-5/6 py-5'>
         {clientSecret &&
+          /* @ts-ignore */
           <Elements options={options} stripe={stripePromise}>
             <StripeCheckoutForm orderData={orderData} />
           </Elements>
@@ -67,4 +77,4 @@ const page = ({ params }: { params: { orderId: string } }) => {
   )
 }
 
-export default page
+export default Page
