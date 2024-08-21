@@ -11,7 +11,7 @@ import {
 import { toast } from '@/components/ui/use-toast';
 import supabase from '@/lib/supabaseClient';
 import { OrdersProps } from '@/types/orders.types';
-import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { Edit, Eye, MoreHorizontal, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -70,9 +70,9 @@ export const CellAction = ({ id, data, setOrdersData }: Props) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/user/`)}
+            onClick={() => router.push(`/dashboard/orders/${id}`)}
           >
-            <Edit className="w-4 h-4 mr-2" /> View
+            <Eye className="w-4 h-4 mr-2" /> View
           </DropdownMenuItem>
           <DropdownMenuItem className='font-semibold text-red-600 cursor-pointer' onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" /> Delete

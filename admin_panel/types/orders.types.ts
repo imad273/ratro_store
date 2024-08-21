@@ -13,7 +13,10 @@ export type OrdersProps = {
   customer_state: string
   customer_zipcode: string
   payment_method: string
-  products: ProductProps[]
+  products: {
+    product: ProductProps
+    quantity: number
+  }[]
   total_amount: number
   discount: number
   order_number: string
