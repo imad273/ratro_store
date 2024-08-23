@@ -32,6 +32,7 @@ interface Props {
 const Page = ({ params }: Props) => {
   const [productData, setProductData] = useState<ProductProps>()
   const [loading, setIsLoading] = useState<boolean>(true)
+  const [selectedImage, setSelectedImage] = useState<string>("")
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -42,6 +43,7 @@ const Page = ({ params }: Props) => {
 
       if (!error) {
         setProductData(data[0]);
+        setSelectedImage(data[0].images[0]);
         setIsLoading(false)
       }
     }
@@ -94,9 +96,24 @@ const Page = ({ params }: Props) => {
           <section className='min-h-screen container'>
             <div className='flex flex-col md:flex-row gap-6 py-8'>
               <div className='md:w-3/6'>
-                <h1 className='mb-6 md:hidden text-3xl text-headingText font-semibold'>{productData?.name}</h1>
+                <div>
 
-                <Image src={productImg1} alt='product' className='rounded' />
+                  <h1 className='mb-6 md:hidden text-3xl text-headingText font-semibold'>{productData?.name}</h1>
+
+                  {selectedImage === "" ?
+                    <img src={`https://placehold.co/600x400/3c10cc/FFF`} alt='product' className='w-full rounded' />
+                    :
+                    <img src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${selectedImage}`} alt='product' className='w-full rounded' />
+                  }
+                </div>
+                <div className='flex items-center gap-2 pt-3'>
+                  {productData?.images.map(image => (
+                    <div key={image} className='relative cursor-pointer overflow-hidden border-[3px] border-main rounded-3xl' onClick={() => setSelectedImage(image)}>
+                      {selectedImage !== image && <div className='absolute w-full h-full bg-white/60'></div>}
+                      <Image className='w-16 h-16 m-1 rounded-2xl' width={64} height={64} alt='product image' src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${image}`} />
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className='md:w-3/6'>
