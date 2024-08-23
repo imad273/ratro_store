@@ -1,6 +1,5 @@
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Logout } from '@/app/(auth)/actions';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,11 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { createSupabaseServerClient } from '@/lib/supabaseServer';
 import { User } from 'lucide-react';
+import { redirect } from 'next/navigation';
+
 export function UserNav() {
+
+
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,7 +45,7 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => Logout()}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

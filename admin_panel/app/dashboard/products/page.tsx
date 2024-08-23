@@ -20,9 +20,6 @@ const page = () => {
 
   const [productsData, setProductsData] = useState<ProductProps[]>([])
   const [loading, setIsLoading] = useState<boolean>(true)
-  useEffect(() => {
-    console.log("sjsjsj");
-  }, [])
 
   useEffect(() => {
     const fetchProducts = async () => {

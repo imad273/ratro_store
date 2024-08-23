@@ -100,7 +100,7 @@ const OrdersTable = ({ data, setOrdersData }: TableProps) => {
                     {order.shipping_address}
                   </TableCell>
                   <TableCell>
-                    {order.products.length}
+                    {order?.products.reduce((total, order) => total + order.quantity, 0)}
                   </TableCell>
                   <TableCell>
                     <CellAction data={data} setOrdersData={setOrdersData} id={order.id} />
