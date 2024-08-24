@@ -6,7 +6,7 @@ import { Accordion, Content, Tab, Trigger } from '@/components/ui/accordion'
 import { GridBeam } from "@/components/ui/gridBeam";
 import { ShinyTextButton } from "@/components/ui/shinyTextButton";
 import { ArrowRightIcon } from "lucide-react";
-
+import { toast } from '@/components/ui/use-toast';
 import { Button } from "@/components/ui/button"
 import { Product } from "@/components";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,25 @@ import supabase from "@/lib/supabaseClient";
 import { ProductProps } from "@/types/products.types";
 import ProductFetchSkeleton from "@/components/loading/productFetchSkeleton";
 import EmptyProducts from "@/components/emptyAlerts/EmptyProducts";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormMessage,
+  FormControl
+} from "@/components/ui/form";
+
+const formSchema = z.object({
+  emailAddress: z
+    .string()
+    .min(3, { message: 'Your Email is required' })
+    .email({ message: "Invalid email address" }),
+})
+
+type EmailFormValues = z.infer<typeof formSchema>;
 
 export default function Home() {
   // FAQ Questions
@@ -49,6 +68,43 @@ export default function Home() {
 
     fetchProducts();
   }, [])
+
+  const defaultValues = {
+    emailAddress: '',
+  };
+
+  const form = useForm<EmailFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues
+  });
+
+  const [emailLoading, setEmailLoading] = useState(false)
+
+  const onSubmit = async (dataValue: EmailFormValues) => {
+    setEmailLoading(true);
+    const { error } = await supabase
+      .from('clients_submissions')
+      .insert({
+        email: dataValue.emailAddress
+      });
+
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Something went wrong.',
+        description: 'There was a problem with your request.'
+      });
+      return
+    } else {
+      toast({
+        variant: 'success',
+        title: 'Successfully Received',
+        description: 'Your email has been successfully eeceived'
+      });
+    }
+
+    setEmailLoading(false);
+  }
 
   return (
     <main>
@@ -121,9 +177,33 @@ export default function Home() {
               <h3 className="text-4xl pb-5 font-semibold">Join Our Newsletter!</h3>
               <p className="w-5/6 pb-5">Subscribe to our newsletter and be the first to know about our latest products, exclusive offers, and special promotions. Simply enter your email below to stay updated!</p>
 
-              <div className="flex w-full max-w-md items-center space-x-2">
-                <Input className="text-gray-700" type="email" placeholder="Email" />
-                <Button className="bg-white text-gray-700 hover:bg-gray-200 hover:text-main" type="submit">Subscribe</Button>
+              <div>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-full flex max-w-md gap-2"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="emailAddress"
+                      render={({ field }) => (
+                        <FormItem className="flex-[1]">
+                          <FormControl>
+                            <Input
+                              disabled={emailLoading}
+                              type="email"
+                              className="text-gray-700 w-full"
+                              placeholder="Email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-white" />
+                        </FormItem>
+                      )}
+                    />
+                    <Button disabled={emailLoading} className="bg-white text-gray-700 hover:bg-gray-200 hover:text-main flex justify-center items-center" type="submit">Subscribe</Button>
+                  </form>
+                </Form>
               </div>
             </div>
           </div>

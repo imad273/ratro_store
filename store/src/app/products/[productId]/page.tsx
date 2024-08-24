@@ -110,7 +110,7 @@ const Page = ({ params }: Props) => {
                   {productData?.images.map(image => (
                     <div key={image} className='relative cursor-pointer overflow-hidden border-[3px] border-main rounded-3xl' onClick={() => setSelectedImage(image)}>
                       {selectedImage !== image && <div className='absolute w-full h-full bg-white/60'></div>}
-                      <Image className='w-16 h-16 m-1 rounded-2xl' width={64} height={64} alt='product image' src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${image}`} />
+                      <Image className='w-12 h-12 m-1 rounded-2xl' width={48} height={48} alt='product image' src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${image}`} />
                     </div>
                   ))}
                 </div>

@@ -10,6 +10,7 @@ import SiteLoading from "@/components/loading/siteLoading";
 import supabase from "@/lib/supabaseClient";
 import { SettingsProps } from "@/types/settings.type";
 import useSettings from "@/zustand/settings";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function RootLayout({
   children,
@@ -52,6 +53,9 @@ export default function RootLayout({
     fetchSettings();
   }, [])
 
+  const path = usePathname()
+  const allowedPathsForSign = ["/", "/products", "/cart"]
+
   return (
     <html lang="en">
       <body>
@@ -59,8 +63,12 @@ export default function RootLayout({
           <SiteLoading />
           :
           <>
-            {settings?.promotionSign &&
-              <PromotionSign promotionSignText={settings.promotionSignText} />
+            {
+              allowedPathsForSign.map(pathName => (
+                pathName === path &&
+                settings?.promotionSign &&
+                <PromotionSign key={path} promotionSignText={settings.promotionSignText} />
+              ))
             }
             <Navbar />
             <main>
