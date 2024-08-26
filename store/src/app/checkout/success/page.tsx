@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button';
 import supabase from '@/lib/supabaseClient';
 import useCart from '@/zustand/cart';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react'
 import { FaCheck } from 'react-icons/fa'
 
 const Page = () => {
-  const { productsCart, removeItem } = useCart();
+  const { isLoading, productsCart, removeItem } = useCart();
 
   const searchParams = useSearchParams();
 

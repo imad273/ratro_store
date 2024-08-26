@@ -99,10 +99,6 @@ export default function StripeCheckoutForm({ orderData }: { orderData: OrdersPro
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    console.log(isElementLoading);
-  }, [isElementLoading])
-
   if (!stripe || !elements) {
     return (
       <div className="flex items-center justify-center">

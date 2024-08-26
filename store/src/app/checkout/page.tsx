@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -21,6 +21,7 @@ import supabase from '@/lib/supabaseClient';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import LoadingBadge from '@/components/loading/uploadLoading';
+import NotFound from '../not-found';
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -79,7 +80,7 @@ const Page = () => {
     defaultValues
   });
 
-  const { productsCart } = useCart();
+  const { isLoading, productsCart } = useCart();
 
   const calculateSubtotal = () => {
     const subtotal = productsCart.reduce((total, product) => {
@@ -134,9 +135,13 @@ const Page = () => {
     setLoading(false);
   }
 
+  if (isLoading === false && productsCart.length === 0) {
+    return (<NotFound />)
+  }
+
   return (
-    <section className="min-h-screen container py-3">
-      <h1 className='text-3xl font-bold py-2 text-headingText'>Checkout</h1>
+    <section className="min-h-screen container pt-4 pb-8">
+      <h1 className='text-4xl font-bold pt-2 py-4 text-headingText'>Checkout</h1>
       <div className='flex flex-col-reverse md:grid md:grid-cols-3 gap-3'>
         <div className='col-span-2'>
           <div className="flex">
