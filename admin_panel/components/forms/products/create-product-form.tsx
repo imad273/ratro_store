@@ -56,6 +56,7 @@ const formSchema = z.object({
     .string()
     .min(3, { message: 'Short description is required' }),
   badge: z.string().min(1, { message: 'Please select a badge' }),
+  shippingTime: z.string().min(1, { message: 'Shipping Time is required' }),
   options: z.array(z.any()).optional()
 }).refine((data) => {
   if (data.discount === true) {
@@ -82,6 +83,7 @@ export const CreateProductForm = () => {
     discount: false,
     discountPrice: 1,
     badge: 'none',
+    shippingTime: '1',
   };
 
   const form = useForm<ProductFormValues>({
@@ -202,6 +204,7 @@ export const CreateProductForm = () => {
         badge: dataValue.badge,
         description: dataValue.description,
         shortDescription: dataValue.shortDescription,
+        shippingTime: dataValue.shippingTime,
         options: dataValue.options,
       }).select()
 
@@ -424,6 +427,23 @@ export const CreateProductForm = () => {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <RichTextInput description={field.value} onChange={field.onChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="shippingTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Shipping Time (weeks)</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete='false'
+                      placeholder="1-3"
+                      {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

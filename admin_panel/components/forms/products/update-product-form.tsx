@@ -1,4 +1,5 @@
 'use client';
+
 import * as z from 'zod';
 import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -57,6 +58,7 @@ const formSchema = z.object({
     .string()
     .min(3, { message: 'Short description is required' }),
   badge: z.string().min(1, { message: 'Please select a badge' }),
+  shippingTime: z.string().min(1, { message: 'Shipping Time is required' }),
   options: z.array(z.any()).optional()
 }).refine((data) => {
   if (data.discount === true) {
@@ -89,6 +91,8 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
     discount: false,
     discountPrice: 1,
     badge: 'none',
+    shippingTime: '1',
+    options: [],
   };
 
   const form = useForm<ProductFormValues>({
@@ -106,8 +110,13 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
       form.setValue('discountPrice', productData?.discountPrice)
       form.setValue('badge', productData?.badge)
       form.setValue('shortDescription', productData?.shortDescription)
-      form.setValue('options', productData?.options)
-      setOptionsPreset(productData?.options)
+      form.setValue('shippingTime', productData?.shippingTime)
+
+      if (productData?.options !== null) {
+        form.setValue('options', productData?.options)
+        setOptionsPreset(productData?.options)
+      }
+
       setLoading(false)
     }
   }, [productData])
@@ -175,6 +184,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
   }, [optionsPreset])
 
   const onSubmit = async (dataValue: ProductFormValues) => {
+
     const isOptionHasEmptyFields = optionsPreset.some((option: any) => {
       return option.optionName === '' || option.optionValue.some((value: any) => value === '');
     });
@@ -237,6 +247,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
               badge: dataValue.badge,
               description: dataValue.description,
               shortDescription: dataValue.shortDescription,
+              shippingTime: dataValue.shippingTime,
               options: dataValue.options,
             })
             .eq('id', productId)
@@ -275,6 +286,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
         badge: dataValue.badge,
         description: dataValue.description,
         shortDescription: dataValue.shortDescription,
+        shippingTime: dataValue.shippingTime,
         options: dataValue.options,
       })
       .eq('id', productId)
@@ -506,6 +518,23 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="shippingTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Shipping Time (weeks)</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete='false'
+                      placeholder="1-3"
+                      {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div>
               <h3 className='my-4 text-xl font-semibold'>Product Options</h3>
               <div className='mb-2'>
@@ -515,7 +544,7 @@ export const UpdateProductForm = ({ productData, fetchLoading, productId }: Prop
               </div>
 
               <div>
-                {optionsPreset.length > 0 &&
+                {optionsPreset?.length > 0 &&
                   <div className='space-y-2'>
                     {optionsPreset.map((option, index: number) => (
                       <div key={index} className='space-y-2'>
