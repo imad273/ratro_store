@@ -14,7 +14,7 @@ const Footer = () => {
           <div className="lg:flex">
             <div className="w-full lg:w-2/5">
               <div>
-                <a href="#">
+                <a href="/">
                   <Image className="w-auto h-7" src={LOGO} alt="Logo" />
                 </a>
 
