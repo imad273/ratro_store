@@ -7,7 +7,7 @@ const nextConfig = {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   },
   reactStrictMode: false,
-  distDir: "build",
+  /* distDir: "build", */
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

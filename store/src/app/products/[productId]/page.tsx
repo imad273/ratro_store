@@ -29,10 +29,16 @@ interface Props {
   }
 }
 
+type OptionsProps = {
+  option: string,
+  value: string
+}
+
 const Page = ({ params }: Props) => {
   const [productData, setProductData] = useState<ProductProps>()
   const [loading, setIsLoading] = useState<boolean>(true)
   const [selectedImage, setSelectedImage] = useState<string>("")
+  const [selectedOptions, setSelectedOptions] = useState<OptionsProps[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -44,12 +50,28 @@ const Page = ({ params }: Props) => {
       if (!error) {
         setProductData(data[0]);
         setSelectedImage(data[0].images[0]);
+
+        const optionsArr: OptionsProps[] = [];
+
+        if (data[0].options && data[0].options.length > 0) {
+          data[0].options.map((option: any) => {
+            optionsArr.push(
+              {
+                option: option.optionName,
+                value: option.optionValue[0]
+              }
+            )
+          });
+
+          setSelectedOptions(optionsArr)
+        }
+
         setIsLoading(false)
       }
     }
 
     fetchProducts();
-  }, [])
+  }, []);
 
   const [quantity, setQuantity] = useState<number>(1);
 
@@ -67,7 +89,7 @@ const Page = ({ params }: Props) => {
       return
     }
 
-    addItem(product, quantity);
+    addItem(product, quantity, selectedOptions);
 
     localStorage.setItem('cart', JSON.stringify([
       ...productsCart,
@@ -83,6 +105,14 @@ const Page = ({ params }: Props) => {
       description: 'Visit the cart page to check it out'
     });
   };
+
+  function updateOptionValue(optionName: string, newValue: string) {
+    setSelectedOptions(prevOptions =>
+      prevOptions.map(item =>
+        item.option === optionName ? { ...item, value: newValue } : item
+      )
+    );
+  }
 
   return (
     <main>
@@ -174,7 +204,7 @@ const Page = ({ params }: Props) => {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="outline" className='flex justify-between items-center w-full bg-gray-50'>
-                              Open
+                              {selectedOptions.find(item => item.option === option.optionName)?.value}
                               <IoIosArrowDown />
                             </Button>
                           </DropdownMenuTrigger>
@@ -182,7 +212,7 @@ const Page = ({ params }: Props) => {
                           <DropdownMenuContent className="w-full">
                             {option.optionValue.map((value, index) => (
                               <DropdownMenuGroup key={index}>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => updateOptionValue(option.optionName, value)}>
                                   <span>{value}</span>
                                 </DropdownMenuItem>
                               </DropdownMenuGroup>

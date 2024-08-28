@@ -5,20 +5,26 @@ type CartProps = {
   product: ProductProps
   quantity: number
 }
+type OptionsProps = {
+  option: string,
+  value: string
+}
 
 const useCart = create<({
   isLoading: boolean
   productsCart: CartProps[];
-  addItem: (product: ProductProps, quantity: number) => void;
+  selectedOptions: OptionsProps[]
+  addItem: (product: ProductProps, quantity: number, selectedOptions: OptionsProps[]) => void;
   removeItem: (productId: number) => void;
   updateQuantity: (productId: number, action: 'increase' | 'decrease') => void;
   setIsLoading: (isLoadingNewValue: boolean) => void;
 })>((set) => ({
   isLoading: true,
   productsCart: [],
-  addItem: (product: ProductProps, quantity: number) =>
+  selectedOptions: [],
+  addItem: (product: ProductProps, quantity: number, selectedOptions: OptionsProps[]) =>
     set((state) => ({
-      productsCart: [...state.productsCart, { product, quantity }]
+      productsCart: [...state.productsCart, { product, quantity, selectedOptions }]
     })),
   removeItem: (productId: number) =>
     set((state) => ({

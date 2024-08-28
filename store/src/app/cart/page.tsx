@@ -1,7 +1,7 @@
 "use client"
-import React, { useEffect } from 'react'
+
+import React from 'react'
 import { FaTrashAlt } from 'react-icons/fa'
-import productImg1 from "@/assets/product-1.jpg";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import useCart from '@/zustand/cart';
