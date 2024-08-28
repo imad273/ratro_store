@@ -12,7 +12,9 @@ const Product = ({ productData }: Props) => {
   return (
     <div className="border p-1 rounded flex flex-col justify-between h-full">
       <div className='flex flex-col justify-between h-full'>
-        <img className="w-full h-52 md:h-48 lg:h-56 rounded" src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${productData.images[0]}`} alt="product 1" />
+        <Link href={`/products/${productData.id}`}>
+          <img className="w-full h-52 md:h-48 lg:h-56 rounded" src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${productData.images[0]}`} alt="product 1" />
+        </Link>
         <div className="mt-2 mb-1">
           <div className='flex items-center flex-wrap gap-3 '>
             {productData.availability === false &&

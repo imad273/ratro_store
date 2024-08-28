@@ -28,16 +28,16 @@ export default function NavBar() {
                 <IoMdClose size={22} />
               </div>
 
-              <Link href="/" className="text-gray-500 hover:text-main duration-300 font-semibold">
+              <Link href="/" onClick={() => setPhoneMenu(false)} className="text-gray-500 hover:text-main duration-300 font-semibold">
                 Home
               </Link>
-              <Link href="/products" className="text-gray-500 hover:text-main duration-300 font-semibold">
+              <Link href="/products" onClick={() => setPhoneMenu(false)} className="text-gray-500 hover:text-main duration-300 font-semibold">
                 Products
               </Link>
-              <Link href="/#about" className="text-gray-500 hover:text-main duration-300 font-semibold">
+              <Link href="/#about" onClick={() => setPhoneMenu(false)} className="text-gray-500 hover:text-main duration-300 font-semibold">
                 About
               </Link>
-              <Link href="/#faq" className="text-gray-500 hover:text-main duration-300 font-semibold">
+              <Link href="/#faq" onClick={() => setPhoneMenu(false)} className="text-gray-500 hover:text-main duration-300 font-semibold">
                 FAQ
               </Link>
             </nav>
