@@ -123,12 +123,12 @@ const Page = ({ params }: Props) => {
         </div>
         :
         <>
-          <section className='min-h-screen container'>
-            <div className='flex flex-col md:flex-row gap-6 py-8'>
+          <section className='container min-h-screen'>
+            <div className='flex flex-col gap-6 py-8 md:flex-row'>
               <div className='md:w-3/6'>
                 <div>
 
-                  <h1 className='mb-6 md:hidden text-3xl text-headingText font-semibold'>{productData?.name}</h1>
+                  <h1 className='mb-6 text-3xl font-semibold md:hidden text-headingText'>{productData?.name}</h1>
 
                   {selectedImage === "" ?
                     <img src={`https://placehold.co/600x400/3c10cc/FFF`} alt='product' className='w-full rounded' />
@@ -147,22 +147,22 @@ const Page = ({ params }: Props) => {
               </div>
 
               <div className='md:w-3/6'>
-                <h1 className='hidden md:block text-4xl text-headingText font-semibold'>{productData?.name}</h1>
+                <h1 className='hidden text-4xl font-semibold md:block text-headingText'>{productData?.name}</h1>
 
                 {productData?.discount === true ?
-                  <div className="py-3 flex items-center justify-end gap-2">
+                  <div className="flex items-center justify-end gap-2 py-3">
                     <p className="line-through">${productData?.price}</p>
-                    <p className="text-2xl text-headingText font-semibold">${productData?.discountPrice}</p>
+                    <p className="text-2xl font-semibold text-headingText">${productData?.discountPrice}</p>
                   </div>
                   :
-                  <div className="py-3 flex items-center justify-end">
-                    <p className="text-2xl text-headingText font-semibold">${productData?.price}</p>
+                  <div className="flex items-center justify-end py-3">
+                    <p className="text-2xl font-semibold text-headingText">${productData?.price}</p>
                   </div>
                 }
 
                 <div className='py-3'>
                   <p className='text-sm text-gray-700 custom-truncate'>{productData?.shortDescription}</p>
-                  <Link href="#description" className='text-main text-sm cursor-pointer font-semibold'>view all description</Link>
+                  <Link href="#description" className='text-sm font-semibold cursor-pointer text-main'>view all description</Link>
                 </div>
 
                 <div className='grid grid-cols-3 gap-2 py-3'>
@@ -203,7 +203,7 @@ const Page = ({ params }: Props) => {
                       <div className='w-full mt-1'>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className='flex justify-between items-center w-full bg-gray-50'>
+                            <Button variant="outline" className='flex items-center justify-between w-full bg-gray-50'>
                               {selectedOptions.find(item => item.option === option.optionName)?.value}
                               <IoIosArrowDown />
                             </Button>
@@ -229,10 +229,10 @@ const Page = ({ params }: Props) => {
                     Quantity
                   </span>
                   <div>
-                    <div className='inline-flex items-center my-1 py-2 border rounded-md'>
-                      <div className='px-5 text-xl text-headingText font-semibold rounded-r-md cursor-pointer' onClick={() => setQuantity(quantity - 1)}>-</div>
-                      <div className='px-5 h-full text-headingText font-semibold'>{quantity}</div>
-                      <div className='px-5 text-xl text-headingText font-semibold rounded-l-md cursor-pointer' onClick={() => setQuantity(quantity + 1)}>+</div>
+                    <div className='inline-flex items-center py-2 my-1 border rounded-md'>
+                      <div className='px-5 text-xl font-semibold cursor-pointer text-headingText rounded-r-md' onClick={() => setQuantity(quantity - 1)}>-</div>
+                      <div className='h-full px-5 font-semibold text-headingText'>{quantity}</div>
+                      <div className='px-5 text-xl font-semibold cursor-pointer text-headingText rounded-l-md' onClick={() => setQuantity(quantity + 1)}>+</div>
                     </div>
                   </div>
                 </div>
@@ -246,12 +246,12 @@ const Page = ({ params }: Props) => {
               </div>
             </div>
           </section>
-          <section className='min-h-screen container' id='description'>
+          <section className='container min-h-screen' id='description'>
             <div className='py-8'>
-              <div className='font-semibold mb-2'>
+              <div className='mb-2 font-semibold'>
                 <h3 className='inline text-headingText'>Shipping: </h3>
                 <p className='inline text-red-600'>
-                  Expect 2-4 weeks for items to arrive (to be safe).
+                  Expect {productData?.shippingTime} weeks for items to arrive (to be safe).
                 </p>
               </div>
 

@@ -10,6 +10,7 @@ export type ProductProps = {
   name: string
   price: number
   shortDescription: string
+  shippingTime: string
   options: optionsProps[]
 };
 
