@@ -1,6 +1,5 @@
 "use client"
 
-import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from '@/components/ui/toaster';
 import { Footer, Navbar, PromotionSign } from "@/components";
@@ -10,7 +9,8 @@ import SiteLoading from "@/components/loading/siteLoading";
 import supabase from "@/lib/supabaseClient";
 import { SettingsProps } from "@/types/settings.type";
 import useSettings from "@/zustand/settings";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import GoogleAnalytics from "./GoogleAnalytics";
 
 export default function RootLayout({
   children,
@@ -26,7 +26,7 @@ export default function RootLayout({
       let parse = JSON.parse(storedCart);
 
       parse.map((product: any) => (
-        addItem(product.product, product.quantity)
+        addItem(product.product, product.quantity, product.options)
       ))
     }
 
@@ -58,6 +58,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <GoogleAnalytics />
       <body>
         {loadingSettings ?
           <SiteLoading />
