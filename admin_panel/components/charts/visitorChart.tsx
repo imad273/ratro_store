@@ -1,11 +1,12 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 
+type visitorsProps = {
+  date: string | null | undefined
+  activeUsers: number
+}
 interface ChartProps {
-  data: {
-    date: string | null | undefined
-    activeUsers: number
-  }[]
+  data: visitorsProps[]
 }
 
 const visitorChart = ({ data }: ChartProps) => {

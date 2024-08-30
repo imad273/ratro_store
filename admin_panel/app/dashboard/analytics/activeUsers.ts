@@ -2,7 +2,7 @@
 
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
 
-export const getAnalyticsData = async () => {
+export const getUsersData = async () => {
   const propertyId = "456440721";
 
   const analyticsDataClient = new BetaAnalyticsDataClient({
