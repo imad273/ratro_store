@@ -8,6 +8,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.recharts-wrapper {
+  margin: 0px;
+}
+.recharts-cartesian-axis-ticks {
+  font-size: 12px;
+}
+
 @layer base {
   :root {
     --background: 20 66% 99%;

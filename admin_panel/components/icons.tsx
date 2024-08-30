@@ -4,7 +4,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  CircuitBoardIcon,
   Command,
   CreditCard,
   File,
@@ -31,6 +30,7 @@ import {
   User2Icon,
   UserX2Icon,
   X,
+  ChartBar
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -63,6 +63,7 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   ShoppingCart: ShoppingCart,
+  ChartBar: ChartBar,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

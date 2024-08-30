@@ -29,6 +29,11 @@ export function MobileSidebar({ className }: SidebarProps) {
       icon: 'ShoppingCart',
     },
     {
+      title: 'Analytics',
+      href: '/dashboard/analytics',
+      icon: 'ChartBar',
+    },
+    {
       title: 'Settings',
       href: '/dashboard/settings',
       icon: 'settings',
