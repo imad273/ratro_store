@@ -18,10 +18,6 @@ const Page = ({ params }: { params: { orderId: string } }) => {
 
   const [orderData, setOrderData] = useState<OrdersProps>();
 
-  /* 
-    TODO: check if order id is valid and it's not paid 
-  */
-
   useEffect(() => {
     const fetchOrderData = async () => {
       const { data, error } = await supabase

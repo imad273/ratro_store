@@ -75,7 +75,7 @@ export default function StripeCheckoutForm({ orderData }: { orderData: OrdersPro
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `/checkout/success?orderId=${orderData?.id}`,
+        return_url: `https://ratro.vercel.app/checkout/success?orderId=${orderData?.id}`,
       },
     });
 
@@ -119,8 +119,8 @@ export default function StripeCheckoutForm({ orderData }: { orderData: OrdersPro
 
       <div>
         {isElementLoading === false &&
-          <div className='flex items-center pb-3 gap-3'>
-            <h3 className="font-semibold text-xl text-headingText">
+          <div className='flex items-center gap-3 pb-3'>
+            <h3 className="text-xl font-semibold text-headingText">
               Total:
             </h3>
             <p className='text-xl font-bold'>${orderData?.total_amount || "-"}</p>
