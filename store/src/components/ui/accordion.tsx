@@ -27,7 +27,7 @@ export const Tab: React.FC<{ children: React.ReactNode; className?: string }> = 
 
   return (
     <TabContext.Provider value={{ isOpen, setOpenState }}>
-      <div className={cn('bg-bg w-full p-6', className)}>{children}</div>
+      <div className={cn('bg-bg w-full py-4', className)}>{children}</div>
     </TabContext.Provider>
   )
 }

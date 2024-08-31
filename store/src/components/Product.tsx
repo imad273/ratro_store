@@ -10,13 +10,13 @@ interface Props {
 
 const Product = ({ productData }: Props) => {
   return (
-    <div className="border p-1 rounded flex flex-col justify-between h-full">
+    <div className="flex flex-col justify-between h-full p-1 border rounded">
       <div className='flex flex-col justify-between h-full'>
         <Link href={`/products/${productData.id}`}>
-          <img className="w-full h-52 md:h-48 lg:h-56 rounded" src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${productData.images[0]}`} alt="product 1" />
+          <img className="w-full rounded h-72 md:h-48 lg:h-56" src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${productData.images[0]}`} alt="product 1" />
         </Link>
         <div className="mt-2 mb-1">
-          <div className='flex items-center flex-wrap gap-3 '>
+          <div className='flex flex-wrap items-center gap-3 '>
             {productData.availability === false &&
               <div className='flex mb-2'>
                 <p className='pl-2 pr-2.5 py-1 text-xs font-semibold gap-2 text-white bg-red-600 shadow-md shadow-rose-300/40 rounded-2xl'>
@@ -43,15 +43,15 @@ const Product = ({ productData }: Props) => {
             }
           </div>
 
-          <h2 className="truncate text-headingText text-2xl">{productData.name}</h2>
+          <h2 className="text-2xl truncate text-headingText">{productData.name}</h2>
           {productData.discount ?
-            <div className="pt-3 flex direction-reverse items-end justify-end gap-2">
-              <p className="line-through text-sm">${productData.price}</p>
-              <p className="text-xl text-headingText font-semibold">${productData.discountPrice}</p>
+            <div className="flex items-end justify-end gap-2 pt-3 direction-reverse">
+              <p className="text-sm line-through">${productData.price}</p>
+              <p className="text-xl font-semibold text-headingText">${productData.discountPrice}</p>
             </div>
             :
             <div className="pt-3">
-              <p className="text-end font-semibold">${productData.price}</p>
+              <p className="font-semibold text-end">${productData.price}</p>
             </div>
           }
         </div>

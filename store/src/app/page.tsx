@@ -123,7 +123,7 @@ export default function Home() {
               duration: 0.5,
               ease: [0.4, 0.0, 0.2, 1],
             }}
-            className="text-2xl px-4 md:text-4xl lg:text-5xl font-bold text-headingText max-w-4xl leading-relaxed lg:leading-snug text-center"
+            className="max-w-4xl px-4 text-2xl font-bold leading-relaxed text-center md:text-4xl lg:text-5xl text-headingText lg:leading-snug"
           >
             With Ratro, nothing&apos;s real. Everything is far away. Everything
             is a{" "}
@@ -134,7 +134,7 @@ export default function Home() {
         </HeroHighlight>
       </section>
 
-      <section className="blured py-3">
+      <section className="py-3 blured">
         <div className="container">
           {loading ?
             <ProductFetchSkeleton />
@@ -143,9 +143,9 @@ export default function Home() {
               <EmptyProducts from="products" />
               :
               <>
-                <h1 className="text-headingText text-4xl text-center font-semibold py-5">Trend Products</h1>
+                <h1 className="py-5 text-4xl font-semibold text-center text-headingText">Trend Products</h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-6">
+                <div className="grid grid-cols-1 gap-6 py-6 md:grid-cols-4">
                   {productsData.map(product => (
                     <Product key={product.id} productData={product} />
                   ))}
@@ -166,22 +166,22 @@ export default function Home() {
 
       <section className="min-h-[50vh] flex justify-center items-center bg-main py-8 text-white">
         <div className="relative w-full">
-          <Line className="bg-gradient-to-l left-0 top-2 sm:top-4 md:top-6" />
-          <Line className="bg-gradient-to-r bottom-2 sm:bottom-4 md:bottom-6 left-0" />
+          <Line className="left-0 bg-gradient-to-l top-2 sm:top-4 md:top-6" />
+          <Line className="left-0 bg-gradient-to-r bottom-2 sm:bottom-4 md:bottom-6" />
 
-          <Line className="w-px bg-gradient-to-t right-2 sm:right-4 md:right-6 h-full inset-y-0" />
-          <Line className="w-px bg-gradient-to-b left-2 sm:left-4 md:left-6 h-full inset-y-0" />
+          <Line className="inset-y-0 w-px h-full bg-gradient-to-t right-2 sm:right-4 md:right-6" />
+          <Line className="inset-y-0 w-px h-full bg-gradient-to-b left-2 sm:left-4 md:left-6" />
 
           <div className="container relative z-20 py-14">
             <div className="w-full px-3 md:px-0">
-              <h3 className="text-4xl pb-5 font-semibold">Join Our Newsletter!</h3>
+              <h3 className="pb-5 text-4xl font-semibold">Join Our Newsletter!</h3>
               <p className="w-5/6 pb-5">Subscribe to our newsletter and be the first to know about our latest products, exclusive offers, and special promotions. Simply enter your email below to stay updated!</p>
 
               <div>
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-full flex max-w-md gap-2"
+                    className="flex w-full max-w-md gap-2"
                   >
                     <FormField
                       control={form.control}
@@ -192,7 +192,7 @@ export default function Home() {
                             <Input
                               disabled={emailLoading}
                               type="email"
-                              className="text-gray-700 w-full"
+                              className="w-full text-gray-700"
                               placeholder="Email"
                               {...field}
                             />
@@ -201,7 +201,7 @@ export default function Home() {
                         </FormItem>
                       )}
                     />
-                    <Button disabled={emailLoading} className="bg-white text-gray-700 hover:bg-gray-200 hover:text-main flex justify-center items-center" type="submit">Subscribe</Button>
+                    <Button disabled={emailLoading} className="flex items-center justify-center text-gray-700 bg-white hover:bg-gray-200 hover:text-main" type="submit">Subscribe</Button>
                   </form>
                 </Form>
               </div>
@@ -213,7 +213,7 @@ export default function Home() {
       <section id="about">
         <div className="bg-white min-h-screen h-screen md:min-h-[80vh] md:h-[80vh]">
           <div className='w-full h-full relative bg-grid-black/[0.1] px-4'>
-            <div className='relative h-full flex-col flex items-center justify-center z-30 animate-moveUp'>
+            <div className='relative z-30 flex flex-col items-center justify-center h-full animate-moveUp'>
               <div
                 className={
                   'text-center font-bold text-transparent text-5xl bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600'
@@ -221,14 +221,14 @@ export default function Home() {
               >
                 About us
               </div>
-              <div className="text-gray-700 text-lg py-2 text-center font-semibold">
+              <div className="py-2 text-lg font-semibold text-center text-gray-700">
                 We sell electronic products
               </div>
 
-              <p className="w-full text-sm md:w-4/6 text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae assumenda magnam, quis minima architecto consequuntur qui molestiae, ipsum et placeat, deleniti accusantium quaerat cupiditate quidem debitis iusto blanditiis cum itaque!</p>
+              <p className="w-full text-sm text-center md:w-4/6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae assumenda magnam, quis minima architecto consequuntur qui molestiae, ipsum et placeat, deleniti accusantium quaerat cupiditate quidem debitis iusto blanditiis cum itaque!</p>
             </div>
 
-            <div className="absolute top-0 bg-gradient-to-b from-white via-white to-transparent w-full h-3/6 left-0 z-10">
+            <div className="absolute top-0 left-0 z-10 w-full bg-gradient-to-b from-white via-white to-transparent h-3/6">
 
             </div>
             {/* <div className={'absolute bottom-0 left-0 w-full h-full z-0 animate-appear opacity-0'}>
@@ -238,11 +238,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="min-h-[80vh]" id="faq">
-        <div className="container flex w-full items-start justify-center">
+      <section className="min-h-screen md:min-h-[80vh] flex justify-center items-center" id="faq">
+        <div className="container flex items-start justify-center w-full">
           <div className="w-full">
-            <GridBeam className="sm:pl-16 pt-28 pl-4 flex items-start justify-start">
-              <Accordion>
+            <GridBeam className="flex items-start justify-start">
+              <Accordion className="py-28">
                 {questions.map((e, i) => {
                   return (
                     <Tab key={i}>

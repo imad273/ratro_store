@@ -140,9 +140,9 @@ const Page = () => {
   }
 
   return (
-    <section className="min-h-screen container pt-4 pb-8">
-      <h1 className='text-4xl font-bold pt-2 py-4 text-headingText'>Checkout</h1>
-      <div className='flex flex-col-reverse md:grid md:grid-cols-3 gap-3'>
+    <section className="container min-h-screen pt-4 pb-8">
+      <h1 className='py-4 pt-2 text-4xl font-bold text-headingText'>Checkout</h1>
+      <div className='flex flex-col-reverse gap-3 md:grid md:grid-cols-3'>
         <div className='col-span-2'>
           <div className="flex">
             <div className='relative'>
@@ -314,7 +314,7 @@ const Page = () => {
                 </Form>
               </div>
             </div>
-            <hr className="hidden md:block h-auto w-px mx-3 bg-gray-300 border-none" />
+            <hr className="hidden w-px h-auto mx-3 bg-gray-300 border-none md:block" />
           </div>
         </div>
 
@@ -340,41 +340,43 @@ const Page = () => {
             ))}
           </div>
 
+          <hr className="h-px my-3 bg-gray-300 border-none" />
+
           <div className='py-3'>
-            <div className='flex justify-between items-center'>
-              <h3 className='text-gray-500 font-semibold'>Subtotal</h3>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-semibold text-gray-500'>Subtotal</h3>
               <p className='font-semibold text-headingText'>${calculateSubtotal()}</p>
             </div>
-            <div className='flex justify-between items-center'>
-              <h3 className='text-gray-500 font-semibold'>Shipping</h3>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-semibold text-gray-500'>Shipping</h3>
               <p className='font-semibold text-headingText'>$0</p>
             </div>
-            <div className='flex justify-between items-center'>
-              <h3 className='text-gray-500 font-semibold'>Tax</h3>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-semibold text-gray-500'>Tax</h3>
               <p className='font-semibold text-headingText'>$0</p>
             </div>
             <div className='py-3'>
-              <h3 className='text-gray-500 font-semibold'>Discount Code</h3>
-              <div className="flex w-full items-center space-x-2">
+              <h3 className='font-semibold text-gray-500'>Discount Code</h3>
+              <div className="flex items-center w-full space-x-2">
                 <Input className="text-gray-700" type="text" placeholder="Code" />
-                <Button className="bg-main text-white hover:bg-mainHover" type="submit">Apply</Button>
+                <Button className="text-white bg-main hover:bg-mainHover" type="submit">Apply</Button>
               </div>
             </div>
 
-            <div className='flex justify-between items-center pt-1'>
-              <h3 className='text-gray-500 font-semibold'>Discount</h3>
+            <div className='flex items-center justify-between pt-1'>
+              <h3 className='font-semibold text-gray-500'>Discount</h3>
               <p className='font-semibold text-headingText'>$0</p>
             </div>
 
             <hr className="h-px my-3 bg-gray-300 border-none" />
 
-            <div className='flex justify-between items-center'>
-              <h3 className='text-gray-500 font-semibold'>Total</h3>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-semibold text-gray-500'>Total</h3>
               <p className='font-semibold text-headingText'>${calculateTotal()}</p>
             </div>
           </div>
 
-          <div className='flex items-center gap-2 text-sm font-semibold pt-2'>
+          <div className='flex items-center gap-2 pt-2 text-sm font-semibold'>
             <LockKeyhole className='text-main' size={18} />
             Secure Checkout - SSL Encrypted
           </div>

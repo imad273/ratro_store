@@ -8,26 +8,26 @@ import { PiInstagramLogoDuotone } from 'react-icons/pi'
 
 const Footer = () => {
   return (
-    <footer className=" bg-gray-100">
+    <footer className="bg-gray-100 ">
       <div className="container">
         <div className="py-10">
           <div className="lg:flex">
             <div className="w-full lg:w-2/5">
               <div>
-                <a href="/">
+                <a href="/" className='flex items-center justify-center pb-5 md:pb-0 md:block'>
                   <Image className="w-auto h-7" src={LOGO} alt="Logo" />
                 </a>
 
-                <p className="max-w-sm text-sm mt-2 text-gray-500">Join our community on social media and share your experience with us!</p>
+                <p className="max-w-sm mt-2 text-sm text-gray-500">Join our community on social media and share your experience with us!</p>
 
                 <div className="flex items-center gap-3 my-3">
-                  <div className='text-gray-600 cursor-pointer duration-200 hover:text-gray-700'>
+                  <div className='text-gray-600 duration-200 cursor-pointer hover:text-gray-700'>
                     <FaFacebook size={21} />
                   </div>
-                  <div className='text-gray-600 cursor-pointer duration-200 hover:text-gray-700'>
+                  <div className='text-gray-600 duration-200 cursor-pointer hover:text-gray-700'>
                     <PiInstagramLogoDuotone size={21} />
                   </div>
-                  <div className='text-gray-600 cursor-pointer duration-200 hover:text-gray-700'>
+                  <div className='text-gray-600 duration-200 cursor-pointer hover:text-gray-700'>
                     <FaTiktok size={20} />
                   </div>
                 </div>
