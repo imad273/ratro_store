@@ -1,13 +1,21 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { getUsersData } from './activeUsers'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter
+} from '@/components/ui/card'
 import VisitorChart from '@/components/charts/visitorChart'
 import AnalyticsSkeleton from '@/components/loading/analyticsSkeleton'
 import { Banknote, CreditCard, TriangleAlert } from 'lucide-react'
 import { getDevicesData } from './devices'
 import DevicesPieChart from '@/components/charts/devicesPieChart'
 import supabase from '@/lib/supabaseClient'
+import OrdersBarsChart from '@/components/charts/ordersBarsChart'
 
 type visitorsProps = {
   date: string | null | undefined
@@ -17,6 +25,11 @@ type visitorsProps = {
 type devicesProps = {
   name: string | null | undefined
   value: number
+}
+
+type barChartDataProps = {
+  date: string
+  orders: number
 }
 
 const page = () => {
@@ -30,6 +43,7 @@ const page = () => {
   ]);
 
   const [devicesData, setDevicesData] = useState<devicesProps[] | undefined>([]);
+  const [barChartData, setBarChartData] = useState<barChartDataProps[] | undefined>([]);
   const [totalOrders, setTotalOrders] = useState<number>(0);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
 
@@ -79,21 +93,45 @@ const page = () => {
 
   useEffect(() => {
     const fetchOrdersSum = async () => {
-      const { data } = await supabase
+      const { data, count } = await supabase
         .from('orders')
-        .select('created_at, total_amount, order_status');
+        .select('created_at, total_amount, order_status', { count: "exact" })
+        .eq('order_status', 'paid');
 
-      let paidOrders = 0;
       let sum = 0;
-      data?.map(order => {
-        if (order.order_status === "paid") {
-          sum += order.total_amount;
-          paidOrders++
-        }
-      })
+      data?.map(order => (sum += order.total_amount));
 
-      setTotalOrders(paidOrders);
-      setTotalRevenue(sum);
+      const currentDate = new Date();
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(currentDate.getDate() - 30);
+
+      // Filter the data for the last month
+      const filteredData = data?.filter(item => {
+        const createdAtDate = new Date(item.created_at);
+        return createdAtDate >= thirtyDaysAgo && createdAtDate <= currentDate;
+      });
+
+      const orderCountByDate = filteredData?.reduce((acc: any, item: any) => {
+        const date = new Date(item.created_at).toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: 'short'
+        }); // Convert to date string
+        if (!acc[date]) {
+          acc[date] = 0;
+        }
+        acc[date]++;
+        return acc;
+      }, {});
+
+      const BarChartData = Object.keys(orderCountByDate).map(date => ({
+        date: date,
+        orders: orderCountByDate[date]
+      }));
+
+      setBarChartData(BarChartData);
+
+      count && setTotalOrders(count);
+      setTotalRevenue(sum)
       setOrdersLoading(false)
     }
 
@@ -115,6 +153,12 @@ const page = () => {
       }
     }
   }
+
+
+  useEffect(() => {
+    console.log(barChartData);
+  }, [barChartData])
+
 
   return (
     <section>
@@ -182,7 +226,7 @@ const page = () => {
                     Showing visitors devices for the last month
                   </CardDescription>
                 </CardHeader>
-                {visitorsData.length === 1 ?
+                {devicesData?.length === 0 ?
                   <CardContent>
                     <div className='flex flex-col items-center justify-center gap-3 h-[300px]'>
                       <TriangleAlert size={26} />
@@ -205,6 +249,29 @@ const page = () => {
                         </div>
                       </div>
                     </CardFooter>
+                  </CardContent>
+                }
+              </Card>
+            </div>
+
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Most Orders Days</CardTitle>
+                  <CardDescription>
+                    Showing Most Orders Days in the last month
+                  </CardDescription>
+                </CardHeader>
+                {barChartData?.length === 0 ?
+                  <CardContent>
+                    <div className='flex flex-col items-center justify-center gap-3 h-[300px]'>
+                      <TriangleAlert size={26} />
+                      <p>No Data Available</p>
+                    </div>
+                  </CardContent>
+                  :
+                  <CardContent className='p-2'>
+                    <OrdersBarsChart data={barChartData} />
                   </CardContent>
                 }
               </Card>

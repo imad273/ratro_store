@@ -5,6 +5,7 @@ type visitorsProps = {
   date: string | null | undefined
   activeUsers: number
 }
+
 interface ChartProps {
   data: visitorsProps[]
 }
