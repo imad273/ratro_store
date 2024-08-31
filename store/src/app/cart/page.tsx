@@ -8,6 +8,7 @@ import useCart from '@/zustand/cart';
 import ProductPreviewSkeleton from '@/components/loading/productPreviewSkeleton';
 import EmptyProducts from '@/components/emptyAlerts/EmptyProducts';
 import Link from 'next/link';
+import { motion } from 'framer-motion'
 
 const Page = () => {
   const { isLoading, productsCart, removeItem, updateQuantity } = useCart();
@@ -77,27 +78,36 @@ const Page = () => {
           :
           <section className='container min-h-screen gap-5 py-8 md:grid md:grid-cols-3'>
             <div className='flex flex-col col-span-2'>
-              <div className="grid w-full grid-cols-4 gap-2 md:grid-cols-5">
-                <div className='col-span-2'>
-                  <p className='text-sm font-semibold text-gray-500 uppercase md:text-base'>
-                    Product
-                  </p>
-                </div>
-                <div>
-                  <p className='text-sm font-semibold text-gray-500 uppercase md:text-base'>
-                    Quantity
-                  </p>
-                </div>
-                <div>
-                  <p className='text-sm font-semibold text-center text-gray-500 uppercase md:text-base'>
-                    Price
-                  </p>
-                </div>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  ease: "easeOut",
+                  duration: 0.5
+                }}
+              >
 
-              <hr className="h-px my-3 bg-gray-300 border-none" />
+                <div className="grid w-full grid-cols-4 gap-2 md:grid-cols-5">
+                  <div className='col-span-2'>
+                    <p className='text-sm font-semibold text-gray-500 uppercase md:text-base'>
+                      Product
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-sm font-semibold text-gray-500 uppercase md:text-base'>
+                      Quantity
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-sm font-semibold text-center text-gray-500 uppercase md:text-base'>
+                      Price
+                    </p>
+                  </div>
+                </div>
 
-              <>
+                <hr className="h-px my-3 bg-gray-300 border-none" />
+
+
                 {productsCart.map(product => (
                   <div key={product.product.id}>
                     <div>
@@ -133,50 +143,59 @@ const Page = () => {
                     <hr className="h-px my-3 bg-gray-300 border-none" />
                   </div>
                 ))}
-              </>
+              </motion.div>
             </div>
 
-            <div>
-              <div className='px-4 py-3 border rounded-md'>
-                <div className='flex items-center justify-between'>
-                  <h3 className='font-semibold text-gray-500'>Subtotal</h3>
-                  <p className='font-semibold text-headingText'>${calculateSubtotal()}</p>
-                </div>
-                <div className='flex items-center justify-between'>
-                  <h3 className='font-semibold text-gray-500'>Shipping</h3>
-                  <p className='font-semibold text-headingText'>$0</p>
-                </div>
-                <div className='flex items-center justify-between'>
-                  <h3 className='font-semibold text-gray-500'>Tax</h3>
-                  <p className='font-semibold text-headingText'>$0</p>
-                </div>
-                <div className='py-3'>
-                  <h3 className='font-semibold text-gray-500'>Discount Code</h3>
-                  <div className="flex items-center w-full space-x-2">
-                    <Input className="text-gray-700" type="text" placeholder="Code" />
-                    <Button className="text-white bg-main hover:bg-mainHover" type="submit">Apply</Button>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                ease: "easeOut",
+                duration: 0.5
+              }}
+            >
+              <div>
+                <div className='px-4 py-3 border rounded-md'>
+                  <div className='flex items-center justify-between'>
+                    <h3 className='font-semibold text-gray-500'>Subtotal</h3>
+                    <p className='font-semibold text-headingText'>${calculateSubtotal()}</p>
+                  </div>
+                  <div className='flex items-center justify-between'>
+                    <h3 className='font-semibold text-gray-500'>Shipping</h3>
+                    <p className='font-semibold text-headingText'>$0</p>
+                  </div>
+                  <div className='flex items-center justify-between'>
+                    <h3 className='font-semibold text-gray-500'>Tax</h3>
+                    <p className='font-semibold text-headingText'>$0</p>
+                  </div>
+                  <div className='py-3'>
+                    <h3 className='font-semibold text-gray-500'>Discount Code</h3>
+                    <div className="flex items-center w-full space-x-2">
+                      <Input className="text-gray-700" type="text" placeholder="Code" />
+                      <Button className="text-white bg-main hover:bg-mainHover" type="submit">Apply</Button>
+                    </div>
+                  </div>
+
+                  <div className='flex items-center justify-between pt-1'>
+                    <h3 className='font-semibold text-gray-500'>Discount</h3>
+                    <p className='font-semibold text-headingText'>$0</p>
+                  </div>
+
+                  <hr className="h-px my-3 bg-gray-300 border-none" />
+
+                  <div className='flex items-center justify-between'>
+                    <h3 className='font-semibold text-gray-500'>Total</h3>
+                    <p className='font-semibold text-headingText'>${calculateTotal()}</p>
+                  </div>
+
+                  <div className='pt-3'>
+                    <Link href="/checkout">
+                      <Button className='w-full'>Checkout</Button>
+                    </Link>
                   </div>
                 </div>
-
-                <div className='flex items-center justify-between pt-1'>
-                  <h3 className='font-semibold text-gray-500'>Discount</h3>
-                  <p className='font-semibold text-headingText'>$0</p>
-                </div>
-
-                <hr className="h-px my-3 bg-gray-300 border-none" />
-
-                <div className='flex items-center justify-between'>
-                  <h3 className='font-semibold text-gray-500'>Total</h3>
-                  <p className='font-semibold text-headingText'>${calculateTotal()}</p>
-                </div>
-
-                <div className='pt-3'>
-                  <Link href="/checkout">
-                    <Button className='w-full'>Checkout</Button>
-                  </Link>
-                </div>
               </div>
-            </div>
+            </motion.div>
           </section>
       }
     </main>

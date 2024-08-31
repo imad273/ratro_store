@@ -12,7 +12,7 @@ import { Product } from "@/components";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import supabase from "@/lib/supabaseClient";
 import { ProductProps } from "@/types/products.types";
 import ProductFetchSkeleton from "@/components/loading/productFetchSkeleton";
@@ -113,15 +113,15 @@ export default function Home() {
           <motion.h1
             initial={{
               opacity: 0,
-              y: 20,
+              y: 40,
             }}
             animate={{
               opacity: 1,
-              y: [20, -5, 0],
+              y: 0,
             }}
             transition={{
               duration: 0.5,
-              ease: [0.4, 0.0, 0.2, 1],
+              ease: "easeOut",
             }}
             className="max-w-4xl px-4 text-2xl font-bold leading-relaxed text-center md:text-4xl lg:text-5xl text-headingText lg:leading-snug"
           >
@@ -143,100 +143,136 @@ export default function Home() {
               <EmptyProducts from="products" />
               :
               <>
-                <h1 className="py-5 text-4xl font-semibold text-center text-headingText">Trend Products</h1>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    ease: "easeOut",
+                    duration: 0.5
+                  }}
+                >
+                  <h1 className="py-5 text-4xl font-semibold text-center text-headingText">Trend Products</h1>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    ease: "easeOut",
+                    duration: 0.5
+                  }}
+                >
+                  <div className="grid grid-cols-1 gap-6 py-6 md:grid-cols-4">
+                    {productsData.map(product => (
+                      <Product key={product.id} productData={product} />
+                    ))}
+                  </div>
 
-                <div className="grid grid-cols-1 gap-6 py-6 md:grid-cols-4">
-                  {productsData.map(product => (
-                    <Product key={product.id} productData={product} />
-                  ))}
-                </div>
+                  <div className="flex justify-end py-10">
+                    <Link href="/products">
+                      <ShinyTextButton className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-700 hover:duration-300">
+                        <span>✨ See All Products</span>
+                        <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+                      </ShinyTextButton>
+                    </Link>
+                  </div>
 
-                <div className="flex justify-end py-10">
-                  <Link href="/products">
-                    <ShinyTextButton className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-700 hover:duration-300">
-                      <span>✨ See All Products</span>
-                      <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-                    </ShinyTextButton>
-                  </Link>
-                </div>
+                </motion.div>
+
               </>
           }
         </div>
       </section>
 
-      <section className="min-h-[50vh] flex justify-center items-center bg-main py-8 text-white">
-        <div className="relative w-full">
-          <Line className="left-0 bg-gradient-to-l top-2 sm:top-4 md:top-6" />
-          <Line className="left-0 bg-gradient-to-r bottom-2 sm:bottom-4 md:bottom-6" />
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{
+          ease: "easeOut",
+          duration: 0.5
+        }}
+      >
+        <section className="min-h-[50vh] flex justify-center items-center bg-main py-8 text-white">
+          <div className="relative w-full">
+            <Line className="left-0 bg-gradient-to-l top-2 sm:top-4 md:top-6" />
+            <Line className="left-0 bg-gradient-to-r bottom-2 sm:bottom-4 md:bottom-6" />
 
-          <Line className="inset-y-0 w-px h-full bg-gradient-to-t right-2 sm:right-4 md:right-6" />
-          <Line className="inset-y-0 w-px h-full bg-gradient-to-b left-2 sm:left-4 md:left-6" />
+            <Line className="inset-y-0 w-px h-full bg-gradient-to-t right-2 sm:right-4 md:right-6" />
+            <Line className="inset-y-0 w-px h-full bg-gradient-to-b left-2 sm:left-4 md:left-6" />
 
-          <div className="container relative z-20 py-14">
-            <div className="w-full px-3 md:px-0">
-              <h3 className="pb-5 text-4xl font-semibold">Join Our Newsletter!</h3>
-              <p className="w-5/6 pb-5">Subscribe to our newsletter and be the first to know about our latest products, exclusive offers, and special promotions. Simply enter your email below to stay updated!</p>
+            <div className="container relative z-20 py-14">
+              <div className="w-full px-3 md:px-0">
+                <h3 className="pb-5 text-4xl font-semibold">Join Our Newsletter!</h3>
+                <p className="w-5/6 pb-5">Subscribe to our newsletter and be the first to know about our latest products, exclusive offers, and special promotions. Simply enter your email below to stay updated!</p>
 
-              <div>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex w-full max-w-md gap-2"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="emailAddress"
-                      render={({ field }) => (
-                        <FormItem className="flex-[1]">
-                          <FormControl>
-                            <Input
-                              disabled={emailLoading}
-                              type="email"
-                              className="w-full text-gray-700"
-                              placeholder="Email"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-white" />
-                        </FormItem>
-                      )}
-                    />
-                    <Button disabled={emailLoading} className="flex items-center justify-center text-gray-700 bg-white hover:bg-gray-200 hover:text-main" type="submit">Subscribe</Button>
-                  </form>
-                </Form>
+                <div>
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="flex w-full max-w-md gap-2"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="emailAddress"
+                        render={({ field }) => (
+                          <FormItem className="flex-[1]">
+                            <FormControl>
+                              <Input
+                                disabled={emailLoading}
+                                type="email"
+                                className="w-full text-gray-700"
+                                placeholder="Email"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-white" />
+                          </FormItem>
+                        )}
+                      />
+                      <Button disabled={emailLoading} className="flex items-center justify-center text-gray-700 bg-white hover:bg-gray-200 hover:text-main" type="submit">Subscribe</Button>
+                    </form>
+                  </Form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </motion.div>
 
-      <section id="about">
-        <div className="bg-white min-h-screen h-screen md:min-h-[80vh] md:h-[80vh]">
-          <div className='w-full h-full relative bg-grid-black/[0.1] px-4'>
-            <div className='relative z-30 flex flex-col items-center justify-center h-full animate-moveUp'>
-              <div
-                className={
-                  'text-center font-bold text-transparent text-5xl bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600'
-                }
-              >
-                About us
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, ease: [0.6, -0.05, 0.01, 0.99], bounce: 0.4 }}
+      >
+
+        <section id="about">
+          <div className="bg-white min-h-screen h-screen md:min-h-[80vh] md:h-[80vh]">
+            <div className='w-full h-full relative bg-grid-black/[0.1] px-4'>
+              <div className='relative z-30 flex flex-col items-center justify-center h-full animate-moveUp'>
+                <div
+                  className={
+                    'text-center font-bold text-transparent text-5xl bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600'
+                  }
+                >
+                  About us
+                </div>
+                <div className="py-2 text-lg font-semibold text-center text-gray-700">
+                  We sell electronic products
+                </div>
+
+                <p className="w-full text-sm text-center md:w-4/6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae assumenda magnam, quis minima architecto consequuntur qui molestiae, ipsum et placeat, deleniti accusantium quaerat cupiditate quidem debitis iusto blanditiis cum itaque!</p>
               </div>
-              <div className="py-2 text-lg font-semibold text-center text-gray-700">
-                We sell electronic products
+
+              <div className="absolute top-0 left-0 z-10 w-full bg-gradient-to-b from-white via-white to-transparent h-3/6">
+
               </div>
-
-              <p className="w-full text-sm text-center md:w-4/6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae assumenda magnam, quis minima architecto consequuntur qui molestiae, ipsum et placeat, deleniti accusantium quaerat cupiditate quidem debitis iusto blanditiis cum itaque!</p>
-            </div>
-
-            <div className="absolute top-0 left-0 z-10 w-full bg-gradient-to-b from-white via-white to-transparent h-3/6">
-
-            </div>
-            {/* <div className={'absolute bottom-0 left-0 w-full h-full z-0 animate-appear opacity-0'}>
+              {/* <div className={'absolute bottom-0 left-0 w-full h-full z-0 animate-appear opacity-0'}>
               <Lights />
             </div> */}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </motion.div>
+
 
       <section className="min-h-screen md:min-h-[80vh] flex justify-center items-center" id="faq">
         <div className="container flex items-start justify-center w-full">
@@ -246,8 +282,18 @@ export default function Home() {
                 {questions.map((e, i) => {
                   return (
                     <Tab key={i}>
-                      <Trigger className="hover:translate-x-1.5 duration-200">{e.question}</Trigger>
-                      <Content>{e.answer}</Content>
+                      <motion.div
+                        initial={{ opacity: 0, x: 100 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{
+                          ease: "easeOut",
+                          duration: 0.5
+                        }}
+                      >
+
+                        <Trigger className="hover:translate-x-1.5 duration-200">{e.question}</Trigger>
+                        <Content>{e.answer}</Content>
+                      </motion.div>
                     </Tab>
                   )
                 })}
@@ -256,7 +302,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </main>
+    </main >
   );
 }
 

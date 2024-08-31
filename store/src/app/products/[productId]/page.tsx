@@ -22,6 +22,7 @@ import { ProductProps } from '@/types/products.types';
 import Link from 'next/link';
 import useCart from '@/zustand/cart';
 import { toast } from '@/components/ui/use-toast';
+import { motion } from 'framer-motion';
 
 interface Props {
   params: {
@@ -123,141 +124,159 @@ const Page = ({ params }: Props) => {
         </div>
         :
         <>
-          <section className='container min-h-screen'>
-            <div className='flex flex-col gap-6 py-8 md:flex-row'>
-              <div className='md:w-3/6'>
-                <div>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.5
+            }}
+          >
+            <section className='container min-h-screen'>
+              <div className='flex flex-col gap-6 py-8 md:flex-row'>
+                <div className='md:w-3/6'>
+                  <div>
 
-                  <h1 className='mb-6 text-3xl font-semibold md:hidden text-headingText'>{productData?.name}</h1>
+                    <h1 className='mb-6 text-3xl font-semibold md:hidden text-headingText'>{productData?.name}</h1>
 
-                  {selectedImage === "" ?
-                    <img src={`https://placehold.co/600x400/3c10cc/FFF`} alt='product' className='w-full rounded' />
-                    :
-                    <img src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${selectedImage}`} alt='product' className='w-full rounded' />
-                  }
-                </div>
-                <div className='flex items-center gap-2 pt-3'>
-                  {productData?.images.map(image => (
-                    <div key={image} className='relative cursor-pointer overflow-hidden border-[3px] border-main rounded-3xl' onClick={() => setSelectedImage(image)}>
-                      {selectedImage !== image && <div className='absolute w-full h-full bg-white/60'></div>}
-                      <Image className='w-12 h-12 m-1 rounded-2xl' width={48} height={48} alt='product image' src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${image}`} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className='md:w-3/6'>
-                <h1 className='hidden text-4xl font-semibold md:block text-headingText'>{productData?.name}</h1>
-
-                {productData?.discount === true ?
-                  <div className="flex items-center justify-end gap-2 py-3">
-                    <p className="line-through">${productData?.price}</p>
-                    <p className="text-2xl font-semibold text-headingText">${productData?.discountPrice}</p>
-                  </div>
-                  :
-                  <div className="flex items-center justify-end py-3">
-                    <p className="text-2xl font-semibold text-headingText">${productData?.price}</p>
-                  </div>
-                }
-
-                <div className='py-3'>
-                  <p className='text-sm text-gray-700 custom-truncate'>{productData?.shortDescription}</p>
-                  <Link href="#description" className='text-sm font-semibold cursor-pointer text-main'>view all description</Link>
-                </div>
-
-                <div className='grid grid-cols-3 gap-2 py-3'>
-                  <div className='flex flex-col items-center gap-2'>
-                    <FaTruckFast size={20} className='text-gray-500' />
-                    <p className="text-center">
-                      Free Shipping
-                    </p>
-                  </div>
-                  <div className='flex flex-col items-center gap-2'>
-                    {productData?.availability ?
-                      <FaClipboardCheck size={20} className='text-gray-500' />
+                    {selectedImage === "" ?
+                      <img src={`https://placehold.co/600x400/3c10cc/FFF`} alt='product' className='w-full rounded' />
                       :
-                      <TbPackageOff size={20} className='text-red-500' />
+                      <img src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${selectedImage}`} alt='product' className='w-full rounded' />
                     }
-                    <p className="text-center">
-                      {productData?.availability ?
-                        "In Stock"
-                        :
-                        "Out Of Stock"
-                      }
-                    </p>
                   </div>
-                  <div className='flex flex-col items-center gap-2'>
-                    <FaShieldAlt size={20} className='text-gray-500' />
-                    <p className="text-center">
-                      Secure Checkout
-                    </p>
+                  <div className='flex items-center gap-2 pt-3'>
+                    {productData?.images.map(image => (
+                      <div key={image} className='relative cursor-pointer overflow-hidden border-[3px] border-main rounded-3xl' onClick={() => setSelectedImage(image)}>
+                        {selectedImage !== image && <div className='absolute w-full h-full bg-white/60'></div>}
+                        <Image className='w-12 h-12 m-1 rounded-2xl' width={48} height={48} alt='product image' src={`${process.env.SUPABASE_URL}/storage/v1/object/public/${image}`} />
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {productData?.options && productData?.options.length > 0 &&
-                  productData?.options.map((option, index) => (
-                    <div className='my-3' key={index}>
-                      <span>
-                        {option.optionName}
-                      </span>
-                      <div className='w-full mt-1'>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className='flex items-center justify-between w-full bg-gray-50'>
-                              {selectedOptions.find(item => item.option === option.optionName)?.value}
-                              <IoIosArrowDown />
-                            </Button>
-                          </DropdownMenuTrigger>
+                <div className='md:w-3/6'>
+                  <h1 className='hidden text-4xl font-semibold md:block text-headingText'>{productData?.name}</h1>
 
-                          <DropdownMenuContent className="w-full">
-                            {option.optionValue.map((value, index) => (
-                              <DropdownMenuGroup key={index}>
-                                <DropdownMenuItem onClick={() => updateOptionValue(option.optionName, value)}>
-                                  <span>{value}</span>
-                                </DropdownMenuItem>
-                              </DropdownMenuGroup>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                  {productData?.discount === true ?
+                    <div className="flex items-center justify-end gap-2 py-3">
+                      <p className="line-through">${productData?.price}</p>
+                      <p className="text-2xl font-semibold text-headingText">${productData?.discountPrice}</p>
+                    </div>
+                    :
+                    <div className="flex items-center justify-end py-3">
+                      <p className="text-2xl font-semibold text-headingText">${productData?.price}</p>
+                    </div>
+                  }
+
+                  <div className='py-3'>
+                    <p className='text-sm text-gray-700 custom-truncate'>{productData?.shortDescription}</p>
+                    <Link href="#description" className='text-sm font-semibold cursor-pointer text-main'>view all description</Link>
+                  </div>
+
+                  <div className='grid grid-cols-3 gap-2 py-3'>
+                    <div className='flex flex-col items-center gap-2'>
+                      <FaTruckFast size={20} className='text-gray-500' />
+                      <p className="text-center">
+                        Free Shipping
+                      </p>
+                    </div>
+                    <div className='flex flex-col items-center gap-2'>
+                      {productData?.availability ?
+                        <FaClipboardCheck size={20} className='text-gray-500' />
+                        :
+                        <TbPackageOff size={20} className='text-red-500' />
+                      }
+                      <p className="text-center">
+                        {productData?.availability ?
+                          "In Stock"
+                          :
+                          "Out Of Stock"
+                        }
+                      </p>
+                    </div>
+                    <div className='flex flex-col items-center gap-2'>
+                      <FaShieldAlt size={20} className='text-gray-500' />
+                      <p className="text-center">
+                        Secure Checkout
+                      </p>
+                    </div>
+                  </div>
+
+                  {productData?.options && productData?.options.length > 0 &&
+                    productData?.options.map((option, index) => (
+                      <div className='my-3' key={index}>
+                        <span>
+                          {option.optionName}
+                        </span>
+                        <div className='w-full mt-1'>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" className='flex items-center justify-between w-full bg-gray-50'>
+                                {selectedOptions.find(item => item.option === option.optionName)?.value}
+                                <IoIosArrowDown />
+                              </Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent className="w-full">
+                              {option.optionValue.map((value, index) => (
+                                <DropdownMenuGroup key={index}>
+                                  <DropdownMenuItem onClick={() => updateOptionValue(option.optionName, value)}>
+                                    <span>{value}</span>
+                                  </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </div>
+                    ))
+                  }
+
+                  <div className='my-3'>
+                    <span>
+                      Quantity
+                    </span>
+                    <div>
+                      <div className='inline-flex items-center py-2 my-1 border rounded-md'>
+                        <div className='px-5 text-xl font-semibold cursor-pointer text-headingText rounded-r-md' onClick={() => setQuantity(quantity - 1)}>-</div>
+                        <div className='h-full px-5 font-semibold text-headingText'>{quantity}</div>
+                        <div className='px-5 text-xl font-semibold cursor-pointer text-headingText rounded-l-md' onClick={() => setQuantity(quantity + 1)}>+</div>
                       </div>
                     </div>
-                  ))
-                }
+                  </div>
 
-                <div className='my-3'>
-                  <span>
-                    Quantity
-                  </span>
                   <div>
-                    <div className='inline-flex items-center py-2 my-1 border rounded-md'>
-                      <div className='px-5 text-xl font-semibold cursor-pointer text-headingText rounded-r-md' onClick={() => setQuantity(quantity - 1)}>-</div>
-                      <div className='h-full px-5 font-semibold text-headingText'>{quantity}</div>
-                      <div className='px-5 text-xl font-semibold cursor-pointer text-headingText rounded-l-md' onClick={() => setQuantity(quantity + 1)}>+</div>
-                    </div>
+                    <Button onClick={() => productData && handleAddToCart(productData)} disabled={!productData?.availability} className='w-full gap-2'>
+                      <FaCartShopping />
+                      Add To Cart
+                    </Button>
                   </div>
                 </div>
-
-                <div>
-                  <Button onClick={() => productData && handleAddToCart(productData)} disabled={!productData?.availability} className='w-full gap-2'>
-                    <FaCartShopping />
-                    Add To Cart
-                  </Button>
+              </div>
+            </section>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.5
+            }}
+          >
+            <section className='container min-h-screen' id='description'>
+              <div className='py-8'>
+                <div className='mb-2 font-semibold'>
+                  <h3 className='inline text-headingText'>Shipping: </h3>
+                  <p className='inline text-red-600'>
+                    Expect {productData?.shippingTime} weeks for items to arrive (to be safe).
+                  </p>
                 </div>
-              </div>
-            </div>
-          </section>
-          <section className='container min-h-screen' id='description'>
-            <div className='py-8'>
-              <div className='mb-2 font-semibold'>
-                <h3 className='inline text-headingText'>Shipping: </h3>
-                <p className='inline text-red-600'>
-                  Expect {productData?.shippingTime} weeks for items to arrive (to be safe).
-                </p>
-              </div>
 
-              <div className='py-6' id='description' dangerouslySetInnerHTML={{ __html: productData !== undefined ? productData?.description : "" }}></div>
-            </div>
-          </section>
+                <div className='py-6' id='description' dangerouslySetInnerHTML={{ __html: productData !== undefined ? productData?.description : "" }}></div>
+              </div>
+            </section>
+          </motion.div>
         </>
       }
     </main>
