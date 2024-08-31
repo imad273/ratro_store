@@ -154,12 +154,6 @@ const page = () => {
     }
   }
 
-
-  useEffect(() => {
-    console.log(barChartData);
-  }, [barChartData])
-
-
   return (
     <section>
       <h2 className="mb-3 text-2xl font-bold tracking-tight">
