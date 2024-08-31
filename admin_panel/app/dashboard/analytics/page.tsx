@@ -20,7 +20,8 @@ type devicesProps = {
 }
 
 const page = () => {
-  const [loading, setLoading] = useState(true);
+  const [googleAnalyticsLoading, setGoogleAnalyticsLoading] = useState(true);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const [visitorsData, setVisitorsData] = useState<visitorsProps[]>([
     {
       date: "",
@@ -70,7 +71,7 @@ const page = () => {
       setDevicesData(devicesData);
 
       setVisitorsData(arr);
-      setLoading(false);
+      setGoogleAnalyticsLoading(false);
     }
 
     fetchGoogleAnalytics()
@@ -78,17 +79,22 @@ const page = () => {
 
   useEffect(() => {
     const fetchOrdersSum = async () => {
-      const { data, count } = await supabase
+      const { data } = await supabase
         .from('orders')
-        .select('created_at, total_amount, order_status', { count: 'exact' });
+        .select('created_at, total_amount, order_status');
 
-      count && setTotalOrders(count);
+      let paidOrders = 0;
       let sum = 0;
-      data?.map(order => (
-        order.order_status === "paid" ? sum += order.total_amount : sum += 0
-      ))
+      data?.map(order => {
+        if (order.order_status === "paid") {
+          sum += order.total_amount;
+          paidOrders++
+        }
+      })
 
+      setTotalOrders(paidOrders);
       setTotalRevenue(sum);
+      setOrdersLoading(false)
     }
 
     fetchOrdersSum();
@@ -116,7 +122,7 @@ const page = () => {
         Analytics
       </h2>
 
-      {loading ?
+      {googleAnalyticsLoading || ordersLoading ?
         <AnalyticsSkeleton />
         :
         <div>
