@@ -84,10 +84,6 @@ const Page = () => {
     fetchSettings();
   }, [])
 
-  useEffect(() => {
-    console.log(showDiscountField);
-  }, [showDiscountField])
-
   return (
     <main>
       {isLoading || settingsLoading ?

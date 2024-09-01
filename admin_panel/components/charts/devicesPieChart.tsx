@@ -29,8 +29,6 @@ const devicesPieChart = ({ data }: ChartProps) => {
           fill="#8884d8"
           dataKey="value"
           stroke="none"
-          paddingAngle={5}
-          cornerRadius={5}
         >
           {data?.map((entry, index) => (
             <Cell key={`cell-${index}`} style={{ outline: 'none' }} fill={entry.name === "desktop" ? COLORS.desktop : entry.name === "mobile" ? COLORS.phones : COLORS.others} />

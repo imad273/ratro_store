@@ -11,6 +11,7 @@ import { SettingsProps } from "@/types/settings.type";
 import useSettings from "@/zustand/settings";
 import { usePathname } from "next/navigation";
 import GoogleAnalytics from "./GoogleAnalytics";
+import NextTopLoader from 'nextjs-toploader';
 
 export default function RootLayout({
   children,
@@ -60,6 +61,13 @@ export default function RootLayout({
     <html lang="en">
       <GoogleAnalytics />
       <body>
+        <div className="absolute top-0 left-0 z-50">
+
+          <NextTopLoader
+            color={settings?.promotionSign ? "#dddddd" : "#3c10cc"}
+            showSpinner={false}
+          />
+        </div>
         {loadingSettings ?
           <SiteLoading />
           :
@@ -72,6 +80,7 @@ export default function RootLayout({
               ))
             }
             <Navbar />
+
             <main>
               <Toaster />
               {children}
