@@ -24,6 +24,7 @@ const formSchema = z.object({
   promotionSign: z.boolean().default(false).optional(),
   promotionSignText: z.string().optional(),
   showUnavailableProduct: z.boolean().default(false).optional(),
+  showDiscountsCoupons: z.boolean().default(false).optional(),
 }).refine((data) => {
   if (data.promotionSign === true) {
     return data.promotionSignText !== ""
@@ -39,6 +40,7 @@ const StoreSettingsForm = () => {
     promotionSign: true,
     promotionSignText: "",
     showUnavailableProduct: true,
+    showDiscountsCoupons: true,
   };
 
   const form = useForm<StoreSettingsFormValues>({
@@ -69,6 +71,7 @@ const StoreSettingsForm = () => {
       form.setValue('promotionSign', settingsData.promotionSign)
       form.setValue('promotionSignText', settingsData.promotionSignText)
       form.setValue('showUnavailableProduct', settingsData.showUnavailableProduct)
+      form.setValue('showDiscountsCoupons', settingsData.showDiscountsCoupons)
       setIsLoading(false)
     }
   }, [settingsData])
@@ -81,6 +84,7 @@ const StoreSettingsForm = () => {
         promotionSign: dataValue.promotionSign,
         promotionSignText: dataValue.promotionSignText,
         showUnavailableProduct: dataValue.showUnavailableProduct,
+        showDiscountsCoupons: dataValue.showDiscountsCoupons,
       }).eq('id', 1)
     // 1 is the id the settings row, which is the first of course
 
@@ -150,7 +154,6 @@ const StoreSettingsForm = () => {
                 )}
               />
 
-
               <FormField
                 control={form.control}
                 name="showUnavailableProduct"
@@ -169,6 +172,31 @@ const StoreSettingsForm = () => {
                         className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         Show Unavailable Product
+                      </label>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="showDiscountsCoupons"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className='flex items-center gap-3 py-2'>
+                      <FormControl>
+                        <Switch
+                          id='showDiscountsCoupons'
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <label
+                        htmlFor="showDiscountsCoupons"
+                        className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Show Discount Coupons
                       </label>
                     </div>
                     <FormMessage />
