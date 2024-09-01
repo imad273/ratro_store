@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaTrashAlt } from 'react-icons/fa'
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import ProductPreviewSkeleton from '@/components/loading/productPreviewSkeleton'
 import EmptyProducts from '@/components/emptyAlerts/EmptyProducts';
 import Link from 'next/link';
 import { motion } from 'framer-motion'
+import supabase from '@/lib/supabaseClient';
 
 const Page = () => {
   const { isLoading, productsCart, removeItem, updateQuantity } = useCart();
@@ -65,9 +66,31 @@ const Page = () => {
     return calculateSubtotal();
   }
 
+  const [settingsLoading, setSettingsLoading] = useState(true)
+  const [showDiscountField, setShowDiscountField] = useState(false)
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data, error } = await supabase
+        .from('settings')
+        .select()
+
+      if (!error) {
+        setShowDiscountField(data[0].showDiscountsCoupons)
+        setSettingsLoading(false)
+      }
+    }
+
+    fetchSettings();
+  }, [])
+
+  useEffect(() => {
+    console.log(showDiscountField);
+  }, [showDiscountField])
+
   return (
     <main>
-      {isLoading === true ?
+      {isLoading || settingsLoading ?
         <section className='container min-h-[80vh] space-y-3 my-6'>
           <ProductPreviewSkeleton />
           <ProductPreviewSkeleton />
@@ -168,18 +191,23 @@ const Page = () => {
                     <h3 className='font-semibold text-gray-500'>Tax</h3>
                     <p className='font-semibold text-headingText'>$0</p>
                   </div>
-                  <div className='py-3'>
-                    <h3 className='font-semibold text-gray-500'>Discount Code</h3>
-                    <div className="flex items-center w-full space-x-2">
-                      <Input className="text-gray-700" type="text" placeholder="Code" />
-                      <Button className="text-white bg-main hover:bg-mainHover" type="submit">Apply</Button>
-                    </div>
-                  </div>
 
-                  <div className='flex items-center justify-between pt-1'>
-                    <h3 className='font-semibold text-gray-500'>Discount</h3>
-                    <p className='font-semibold text-headingText'>$0</p>
-                  </div>
+                  {showDiscountField === true &&
+                    <>
+                      <div className='py-3'>
+                        <h3 className='font-semibold text-gray-500'>Discount Code</h3>
+                        <div className="flex items-center w-full space-x-2">
+                          <Input className="text-gray-700" type="text" placeholder="Code" />
+                          <Button className="text-white bg-main hover:bg-mainHover" type="submit">Apply</Button>
+                        </div>
+                      </div>
+
+                      <div className='flex items-center justify-between pt-1'>
+                        <h3 className='font-semibold text-gray-500'>Discount</h3>
+                        <p className='font-semibold text-headingText'>$0</p>
+                      </div>
+                    </>
+                  }
 
                   <hr className="h-px my-3 bg-gray-300 border-none" />
 

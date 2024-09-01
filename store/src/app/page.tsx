@@ -273,8 +273,7 @@ export default function Home() {
         </section>
       </motion.div>
 
-
-      <section className="min-h-screen md:min-h-[80vh] flex justify-center items-center" id="faq">
+      <section className="overflow-x-hidden min-h-screen md:min-h-[80vh] flex justify-center items-center" id="faq">
         <div className="container flex items-start justify-center w-full">
           <div className="w-full">
             <GridBeam className="flex items-start justify-start">

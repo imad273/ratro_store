@@ -355,18 +355,11 @@ const Page = () => {
               <h3 className='font-semibold text-gray-500'>Tax</h3>
               <p className='font-semibold text-headingText'>$0</p>
             </div>
-            <div className='py-3'>
-              <h3 className='font-semibold text-gray-500'>Discount Code</h3>
-              <div className="flex items-center w-full space-x-2">
-                <Input className="text-gray-700" type="text" placeholder="Code" />
-                <Button className="text-white bg-main hover:bg-mainHover" type="submit">Apply</Button>
-              </div>
-            </div>
-
-            <div className='flex items-center justify-between pt-1'>
+            
+            {/* <div className='flex items-center justify-between pt-1'>
               <h3 className='font-semibold text-gray-500'>Discount</h3>
               <p className='font-semibold text-headingText'>$0</p>
-            </div>
+            </div> */}
 
             <hr className="h-px my-3 bg-gray-300 border-none" />
 
